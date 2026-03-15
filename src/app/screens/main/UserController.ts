@@ -40,9 +40,11 @@ export class User extends Sprite {
     public get isWalking(): boolean { return this._isWalking }
     public set isWalking(val)
     {
-        const shouldStartWalking = this._isWalking === false && val === true
+        const hasChangedValue = this._isWalking !== val
         this._isWalking = val;
-        if (shouldStartWalking) { this.startWalking() }
+        if (!hasChangedValue){ return; }
+        if (val) { this.startWalking() }
+        else { this.stopWalking() }
     }
     private _currentFrame: number = 0
 
@@ -89,6 +91,13 @@ export class User extends Sprite {
             this.texture  = Texture.from(this._settings.walkingFrames[this._currentFrame]);
             await new Promise(resolve => setTimeout(resolve, 500));
         }
+    }
+
+    public async stopWalking()
+    {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        this.texture  = Texture.from(this._settings.sitting);
+
     }
 
 
