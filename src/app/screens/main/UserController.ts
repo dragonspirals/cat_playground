@@ -1,7 +1,6 @@
-import { Sprite, Texture } from "pixi.js";
+import { Texture, Sprite } from "pixi.js"
 
 import {
-    randomBool,
     randomFloat,
     randomInt,
 } from "../../../engine/utils/random";
@@ -38,12 +37,23 @@ export class User extends Sprite {
         return this.height * 0.5;
     }
 
-    constructor() {
-        const tex = randomBool() ? "logo.svg" : "logo-white.svg";
-        super({ texture: Texture.from(tex), anchor: 0.5, scale: 0.25 });
+    private _isWalking: boolean = false
+    public get isWalking(): boolean { return this._isWalking }
+    public set isWalking(val)
+    {
+        const shouldStartWalking = this._isWalking === false && val === true
+        this._isWalking = val;
+        if (shouldStartWalking) { this.startWalking() }
+    }
+    private _currentFrame: number = 0
+
+        
+    constructor(protected _settings: CatSettings) {
+        super({ texture: Texture.from(_settings.sitting), anchor: 0.5, scale: 0.25 });
         this.direction = randomInt(0, 3);
-        this.speed = randomFloat(1, 6);
+        this.speed = this._settings.walkingSpeed
         window.addEventListener("keydown", (e) => {
+            this.isWalking = true
             switch (e.key) {
             case "ArrowUp":
                 this.direction = DIRECTION.N;
@@ -60,7 +70,28 @@ export class User extends Sprite {
             }
             console.log(DIRECTION[this.direction]);
         });
+        window.addEventListener("keyup", (e) => {
+            switch (e.key) {
+            case "ArrowUp":
+            case "ArrowDown":
+            case "ArrowLeft":
+            case "ArrowRight":
+                this.isWalking = false;
+            }
+            console.log(DIRECTION[this.direction]);
+        });
     }
+    
+    public async startWalking()
+    {
+        while (this.isWalking)
+        {
+            this._currentFrame = (this._currentFrame + 1) % this._settings.walkingFrames.length;
+            this.texture  = Texture.from(this._settings.walkingFrames[this._currentFrame]);
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+    }
+
 
     public update(): void {
         this.setDirection();
@@ -74,6 +105,7 @@ export class User extends Sprite {
     }
 
     private setDirection(): void {
+        if (!this.isWalking) { return; }
         switch (this.direction) {
         case DIRECTION.N:
             if (this.position.y + this.top >= this.yMin) {
@@ -97,4 +129,11 @@ export class User extends Sprite {
             break;
         }
     }
+}
+
+export interface CatSettings
+{
+    walkingFrames: string[];
+    sitting: string,
+    walkingSpeed: number;
 }
