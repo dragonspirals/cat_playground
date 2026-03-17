@@ -1,5 +1,7 @@
-import { Texture, AnimatedSprite, AnimatedSpriteFrames, Container } from "pixi.js"
-import { KeyboardInput } from "../../controllers/KeyboardInput";
+import { Texture, AnimatedSprite, AnimatedSpriteFrames, Container, Sprite } from "pixi.js"
+import { KeyboardInput } from "../../controllers/KeyboardInput"
+
+export enum CatState { Walking, Standing, Sitting, Sleeping }
 
 export class User extends Container {
     public speed!: number;
@@ -25,18 +27,11 @@ export class User extends Container {
         return this.height * 0.5;
     }
 
-    private _isWalking: boolean = false
-    public get isWalking(): boolean { return this._isWalking }
-    public set isWalking(val)
-    {
-        this._isWalking = val;
-        if (!val) { this._walkingSprite.stop() }
-        else { this._walkingSprite.play()}
-    }
+    private _catState: CatState = CatState.Sleeping;
 
     private _walkingSprite: AnimatedSprite;
-    private _sittingTexture: Texture;
-    private _sleepingTexture: Texture;
+    private _sittingSprite: Sprite;
+    private _sleepingSprite: Sprite;
 
     constructor(protected _settings: CatSettings) {
         super();
@@ -47,9 +42,13 @@ export class User extends Container {
         this.keyboardInput.trackKey("ArrowLeft");
         this.keyboardInput.trackKey("ArrowRight");
         this._walkingSprite = this.createWalkingSprite();
-        this._sittingTexture = Texture.from(_settings.sitting);
-        this._sleepingTexture = Texture.from(_settings.sleeping)
-
+        this._sittingSprite = new Sprite({scale: _settings.scale, texture: Texture.from(_settings.sitting)});
+        this._sleepingSprite = new Sprite({scale: _settings.scale, texture: Texture.from(_settings.sleeping)});
+        this.addChild(this._sittingSprite);
+        this.addChild(this._sleepingSprite);
+        this._sittingSprite.position = { x: -this._sittingSprite.width/2, y: -this._sittingSprite.height/2}
+        this._sleepingSprite.position = { x: -this._sleepingSprite.width/2, y: -this._sleepingSprite.height/2}
+        this.setCatState(CatState.Sitting);
     }
 
     public update(): void {
@@ -63,6 +62,28 @@ export class User extends Container {
         this.yMax = h / 2;
     }
 
+    private setCatState(newState: CatState)
+    {
+        if (newState === this._catState) { return; }
+        this._catState = newState;
+        this._sittingSprite.visible = newState === CatState.Sitting;
+        this._walkingSprite.visible = newState === CatState.Walking || newState === CatState.Standing;
+        this._sleepingSprite.visible = newState === CatState.Sleeping;
+        if (newState === CatState.Walking)
+        {
+            this._walkingSprite.play()
+        }
+        else { this._walkingSprite.stop() }
+        if (newState === CatState.Standing)
+        {
+            setTimeout(() => this.setCatState(CatState.Sitting), 2000)
+        }
+        else if (newState === CatState.Sitting)
+        {
+            setTimeout(() => this.setCatState(CatState.Sleeping), 5000)
+        }
+    }
+
     private createWalkingSprite(): AnimatedSprite
     {
         const spriteFrame: AnimatedSpriteFrames = this._settings.walkingFrames.map((frame) => Texture.from(frame))
@@ -74,7 +95,11 @@ export class User extends Container {
     }
 
     private move(): void {
-        this.isWalking = this.keyboardInput.pressedKeys.length > 0
+        if (this.keyboardInput.pressedKeys.length > 0)
+        {
+            this.setCatState(CatState.Walking)
+        }
+        else if (this._catState === CatState.Walking) { this.setCatState(CatState.Standing)}
         if (this.keyboardInput.isKeyPressed("ArrowUp") && this.position.y + this.top >= this.yMin) {
             this.y -= this.speed;
         }
