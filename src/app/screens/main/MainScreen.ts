@@ -2,7 +2,7 @@ import { FancyButton } from "@pixi/ui";
 import { animate } from "motion";
 import type { AnimationPlaybackControls } from "motion/react";
 import type { ContainerOptions, Ticker } from "pixi.js";
-import { Container } from "pixi.js";
+import { Container, FillGradient } from "pixi.js";
 
 import { engine } from "../../getEngine";
 import { PausePopup } from "../../popups/PausePopup";
@@ -32,7 +32,7 @@ export class MainScreen extends Container  {
 
         this.mainContainer = new BoundedContainer({});
         this.addChild(this.mainContainer);
-        this.wall = new Background({fill: '#431915'})
+        this.wall = new Background(this._settings.wall)
         this.mainContainer.addChild(this.wall)
         this.floor = new Background(this._settings.floor)
         this.mainContainer.addChild(this.floor)
@@ -155,13 +155,36 @@ export interface MainScreenSettings extends ContainerOptions
 {
     cat: CatSettings;
     floor: BackgroundSettings;
+    wall: BackgroundSettings;
 }
+
+const floorGradient: FillGradient = new FillGradient({
+    type: 'linear',
+    colorStops: 
+    [
+        { offset: 0, color: "#69564d", }, 
+        { offset: 0.2, color: "#aa9f94", }  
+    ],
+    
+
+})
+
+const wallGradient: FillGradient = new FillGradient({type: 'linear',
+    colorStops: [
+        { offset: 0, color: "#d66b44", }, 
+        { offset: 0.3, color: "#d4ac85", }  
+    ]
+})
 
 export const DefaultMainScreenSettings: MainScreenSettings = 
 {
+    wall:
+    {
+        fill: wallGradient
+    },
     floor: 
     {
-        fill: "#aa9f94", 
+        fill: floorGradient,
         moveChildCheck: (child, newChildPos, currentSize, currentPos) => {
             const isWithinLeft = newChildPos.x - child.width/2 >= currentPos.x 
             const isWithinRight = newChildPos.x + child.width/2 <= currentSize.width + currentPos.x

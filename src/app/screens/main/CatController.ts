@@ -1,6 +1,8 @@
-import { Texture, AnimatedSprite, AnimatedSpriteFrames, Sprite } from "pixi.js"
+import {  Texture, AnimatedSprite, AnimatedSpriteFrames, Sprite, Graphics, FillGradient } from "pixi.js"
+import * as PIXI from "pixi.js"
 import { KeyboardInput } from "../../controllers/KeyboardInput"
 import { BoundedContainer } from "../../displayElements/BoundedContainer";
+import { BlendMode } from "@esotericsoftware/spine-pixi-v8";
 
 export enum CatState { Walking, Standing, Sitting, Sleeping }
 
@@ -44,6 +46,7 @@ export class CatController extends BoundedContainer<CatSettings> {
         this._sittingSprite.position = { x: -this._sittingSprite.width/2, y: -this._sittingSprite.height/2}
         this._sleepingSprite.position = { x: -this._sleepingSprite.width/2, y: -this._sleepingSprite.height/2}
         this.setCatState(CatState.Sitting);
+        this.drawShadow();
     }
 
     public update(parent: BoundedContainer): void {
@@ -81,6 +84,16 @@ export class CatController extends BoundedContainer<CatSettings> {
         {
             this.nextStateTimeout(CatState.Sleeping, 5000)
         }
+    }
+
+    private drawShadow()
+    {
+        const shadow = new Graphics();
+        shadow.alpha = 0.7
+        shadow.blendMode = 'multiply'
+        shadow.ellipse(0, 40, this.width/4, 10).fill("#22213f")
+        this.addChildAt(shadow, 0)
+        shadow.filters = new PIXI.BlurFilter({strength: 10, quality: 5, resolution: 5, kernelSize: 5}) 
     }
 
     /**Goes to next state after a specified timeout */
