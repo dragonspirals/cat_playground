@@ -40,12 +40,15 @@ export class Cat extends BoundedContainer<CatSettings> {
         this.speed = this._settings.walkingSpeed
         this.keyboardInput = this.registerKeyboardInput()
         this._walkingSprite = this.createWalkingSprite();
-        this._sittingSprite = new Sprite({texture: Texture.from(_settings.sitting)});
-        this._sleepingSprite = new Sprite({texture: Texture.from(_settings.sleeping)});
+        this._sittingSprite = new Sprite({texture: Texture.from(_settings.color + "/" + _settings.sitting)});
+        this._sleepingSprite = new Sprite({texture: Texture.from(_settings.color + "/" + _settings.sleeping)});
         this.addChild(this._sittingSprite);
         this.addChild(this._sleepingSprite);
-        this._sittingSprite.position = { x: -this._sittingSprite.width/2, y: -this._sittingSprite.height/2}
-        this._sleepingSprite.position = { x: -this._sleepingSprite.width/2, y: -this._sleepingSprite.height/2}
+        this._sittingSprite.scale = _settings.desiredWidth/this._sittingSprite.width
+        this._sittingSprite.y = this._sittingSprite.height + this._walkingSprite.height/2
+        this._sleepingSprite.scale = _settings.desiredWidth/this._sleepingSprite.width
+        this._sittingSprite.position = { x: -this._sittingSprite.width/2, y: this._walkingSprite.height/2 - this._sittingSprite.height}
+        this._sleepingSprite.position = { x: -this._sleepingSprite.width/2, y: this._walkingSprite.height/2 - this._sleepingSprite.height}
         this.setCatState(CatState.Sitting);
         this.drawShadow();
     }
@@ -111,10 +114,11 @@ export class Cat extends BoundedContainer<CatSettings> {
 
     private createWalkingSprite(): AnimatedSprite
     {
-        const spriteFrame: AnimatedSpriteFrames = this._settings.walkingFrames.map((frame) => Texture.from(frame))
+        const spriteFrame: AnimatedSpriteFrames = this._settings.walkingFrames.map((frame) => Texture.from(this._settings.color + "/" + frame))
         const walkingSprite = new AnimatedSprite({textures: spriteFrame, animationSpeed: 0.05, loop: true});
         walkingSprite.play();
         this.addChild(walkingSprite);
+        walkingSprite.scale = this._settings.desiredWidth/walkingSprite.width
         walkingSprite.position = {x: -walkingSprite.width/2, y: -walkingSprite.height/2}
         return walkingSprite;
     }
@@ -129,7 +133,7 @@ export class Cat extends BoundedContainer<CatSettings> {
             this.y -= this.speed;
         }
         if (this._catController.isGoingRight && parent.canMoveChildTo(this, this.x + this.speed, this.y)) {
-            this.scale.x = -this._settings.scale;
+            this.scale.x = -Math.abs(this.scale.x)
             this.x += this.speed;
         }
         if (this._catController.isGoingDown && parent.canMoveChildTo(this, this.x, this.y + this.speed)) {
@@ -137,7 +141,7 @@ export class Cat extends BoundedContainer<CatSettings> {
         }
 
         if (this._catController.isGoingLeft && parent.canMoveChildTo(this, this.x - this.speed, this.y)) {
-            this.scale.x = this._settings.scale;
+            this.scale.x = Math.abs(this.scale.x)
             this.x -= this.speed;
         }
     }
@@ -145,9 +149,11 @@ export class Cat extends BoundedContainer<CatSettings> {
 
 export interface CatSettings
 {
+    color: string;
     walkingFrames: string[];
     sitting: string,
     walkingSpeed: number;
     sleeping: string;
+    desiredWidth: number,
     scale: number
 }

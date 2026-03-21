@@ -122,7 +122,6 @@ export class MainScreen extends Container  {
 
     /** Show screen with animations */
     public async show(): Promise<void> {
-        engine().audio.bgm.play("main/sounds/bgm-main.mp3", { volume: 0.5 });
 
         const elementsToAnimate = [
             this.pauseButton,
@@ -211,6 +210,8 @@ export const DefaultMainScreenSettings: MainScreenSettings =
     },
     cat: 
     {
+        desiredWidth: 150,
+        color: "preload/cat/orange",
         scale: 1.2,
         sleeping: "cat_sleep.svg", 
         walkingFrames: ["cat_walk.svg", "cat_walk2.svg"], 
