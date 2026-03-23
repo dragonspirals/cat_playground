@@ -27,7 +27,7 @@ export class IdleController implements ICatController
 
     private randomStart(): boolean
     {
-        if (Math.random() > 0.001) { return false; }
+        if (Math.random() > 0.01) { return false; }
         const direction: Observable<boolean> = randomArrayElement([this._isGoingDown, this._isGoingRight, this._isGoingLeft, this._isGoingUp])
         direction.value = true;
         const promise = new Promise<void>((resolve) => 

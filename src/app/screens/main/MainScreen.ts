@@ -168,6 +168,7 @@ export class MainScreen extends Container  {
         const controller = isUserControlled ? new CatKeyboardController() : new IdleController();
         const cat = new Cat({...this._settings.cat, color: "preload/cat/" + color}, controller)
         this.mainContainer.addChild(cat);
+        cat.y += this.cats.length * cat.height;
         this.cats.push(cat)
     }
 }
