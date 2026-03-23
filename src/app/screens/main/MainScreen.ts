@@ -90,7 +90,12 @@ export class MainScreen extends Container  {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public update(_time: Ticker) {
         if (this.paused) return;
-        this.cats.forEach((cat) => cat.update(this.floor));
+        this.cats.sort((catA, catB) => catA.y -catB.y)
+        this.cats.forEach((cat) => 
+        {
+            cat.parent?.addChildAt(cat, cat.parent.children.length -1)
+            cat.update(this.floor)
+        });
     }
 
     /** Pause gameplay - automatically fired when a popup is presented */
