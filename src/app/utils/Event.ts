@@ -1,4 +1,5 @@
-export type Callback = () => {}
+
+export type Callback = () => unknown
 
 export class BasicEvent
 {

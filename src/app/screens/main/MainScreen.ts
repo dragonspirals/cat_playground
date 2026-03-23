@@ -14,7 +14,6 @@ import { Background, BackgroundSettings } from "../../displayElements/Background
 import { BoundedContainer } from "../../displayElements/BoundedContainer.ts";
 import { CatKeyboardController } from "../../controllers/CatController.ts";
 import { IdleController } from "../../controllers/IdleController.ts";
-import { randomNumberBetween } from "../../utils/TypeUtils.ts";
 
 /** The screen that holds the app */
 export class MainScreen extends Container  {

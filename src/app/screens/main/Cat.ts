@@ -1,15 +1,12 @@
-import {  Texture, AnimatedSprite, AnimatedSpriteFrames, Sprite, Graphics, FillGradient } from "pixi.js"
+import {  Texture, AnimatedSprite, AnimatedSpriteFrames, Sprite, Graphics } from "pixi.js"
 import * as PIXI from "pixi.js"
-import { KeyboardInput } from "../../controllers/KeyboardInput"
 import { BoundedContainer } from "../../displayElements/BoundedContainer";
-import { BlendMode } from "@esotericsoftware/spine-pixi-v8";
 import { ICatController } from "../../controllers/CatController";
 
 export enum CatState { Walking, Standing, Sitting, Sleeping }
 
 export class Cat extends BoundedContainer<CatSettings> {
     public speed!: number;
-    private keyboardInput: KeyboardInput;
 
     get left() {
         return -this.width * 0.5;
@@ -33,12 +30,11 @@ export class Cat extends BoundedContainer<CatSettings> {
     private _sittingSprite: Sprite;
     private _sleepingSprite: Sprite;
 
-    private _nextStatePromise: { resolve: (success: boolean) => void, reject:(reason?: any) => void } | undefined;
+    private _nextStatePromise: { resolve: (success: boolean) => void, reject:(reason?: unknown) => void } | undefined;
 
     constructor(protected _settings: CatSettings, private _catController: ICatController) {
         super(_settings);
         this.speed = this._settings.walkingSpeed
-        this.keyboardInput = this.registerKeyboardInput()
         this._walkingSprite = this.createWalkingSprite();
         this._sittingSprite = new Sprite({texture: Texture.from(_settings.color + "/" + _settings.sitting)});
         this._sleepingSprite = new Sprite({texture: Texture.from(_settings.color + "/" + _settings.sleeping)});
@@ -55,16 +51,6 @@ export class Cat extends BoundedContainer<CatSettings> {
 
     public update(parent: BoundedContainer): void {
         this.move(parent);
-    }
-
-    private registerKeyboardInput(): KeyboardInput
-    {
-        const keyboardInput = new KeyboardInput();
-        keyboardInput.trackKey("ArrowUp");
-        keyboardInput.trackKey("ArrowDown");
-        keyboardInput.trackKey("ArrowLeft");
-        keyboardInput.trackKey("ArrowRight");
-        return keyboardInput;
     }
 
     private setCatState(newState: CatState)

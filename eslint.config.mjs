@@ -15,8 +15,7 @@ export default tseslint.config(
       sourceType: "module",
     },
     rules: {
-      "indent": ["error", 4],
-      "typescript-eslint/no-explicit-any" : "warn"
+      "indent": ["error", 4]
     },
   },
 );

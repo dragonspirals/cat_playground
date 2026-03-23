@@ -2,7 +2,6 @@ import { Ticker } from "pixi.js";
 import { CatState } from "../screens/main/Cat";
 import { ICatController } from "./CatController"
 import { randomArrayElement } from "../utils/TypeUtils";
-import { BasicEvent } from "../utils/Event";
 import { Observable } from "../utils/Observable";
 
 export class IdleController implements ICatController
@@ -29,9 +28,9 @@ export class IdleController implements ICatController
     private randomStart(): boolean
     {
         if (Math.random() > 0.001) { return false; }
-        const direction = randomArrayElement([this._isGoingDown, this._isGoingRight, this._isGoingLeft, this._isGoingUp])
+        const direction: Observable<boolean> = randomArrayElement([this._isGoingDown, this._isGoingRight, this._isGoingLeft, this._isGoingUp])
         direction.value = true;
-        const promise = new Promise<void>((resolve, reject) => 
+        const promise = new Promise<void>((resolve) => 
         {
             setTimeout(() => resolve(), Math.random() * 3000 + 5000)
         })

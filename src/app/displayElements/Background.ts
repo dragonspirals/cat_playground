@@ -1,6 +1,5 @@
-import { BLEND_MODES, FillInput, FillPattern, Graphics, Matrix, PatternRepetition, Texture, TextureOptions, TextureSource, TextureSourceLike } from "pixi.js";
+import { BLEND_MODES, FillInput, FillPattern, Graphics, Matrix, PatternRepetition, Texture } from "pixi.js";
 import { BoundedContainer, BoundedContainerSettings } from "./BoundedContainer";
-import { BlendMode } from "@esotericsoftware/spine-pixi-v8";
 
 export class Background<TSettings extends BackgroundSettings = BackgroundSettings> extends BoundedContainer<TSettings>
 {
