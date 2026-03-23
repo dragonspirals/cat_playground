@@ -7,11 +7,11 @@ import { Observable } from "../utils/Observable";
 export class IdleController implements ICatController
 {
     public catState: CatState = CatState.Sitting;
-    public get activeDirections() { return [this._isGoingDown, this._isGoingUp, this._isGoingLeft, this._isGoingRight].filter((obs) => obs.value === true).map((obs)=> obs.value)}
-    public get isGoingUp() { return this._isGoingUp.value };
-    public get isGoingDown() { return this._isGoingDown.value };
-    public get isGoingLeft() { return this._isGoingLeft.value };
-    public get isGoingRight() { return this._isGoingRight.value };
+    public get activeDirections() { return [this.isGoingDown, this.isGoingUp, this.isGoingLeft, this.isGoingRight].filter((obs) => obs === true) };
+    public get isGoingUp() { return this._isGoingUp.value && !this._isGoingDown.value; };
+    public get isGoingDown() { return this._isGoingDown.value && !this._isGoingUp.value; };
+    public get isGoingLeft() { return this._isGoingLeft.value && !this._isGoingRight.value; };
+    public get isGoingRight() { return this._isGoingRight.value && !this._isGoingLeft.value; };
     private _isGoingUp: Observable<boolean> = new Observable(false);
     private _isGoingLeft:  Observable<boolean> = new Observable(false);
     private _isGoingDown:  Observable<boolean> = new Observable(false);

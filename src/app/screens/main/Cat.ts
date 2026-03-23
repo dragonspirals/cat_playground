@@ -110,26 +110,28 @@ export class Cat extends BoundedContainer<CatSettings> {
     }
 
     private move(parent: BoundedContainer): void {
-        if (this._catController.activeDirections?.length > 0)
-        {
-            this.setCatState(CatState.Walking)
-        }
-        else if (this._catState === CatState.Walking) { this.setCatState(CatState.Standing)}
+        let isMoving: boolean = false;
         if (this._catController.isGoingUp && parent.canMoveChildTo(this, this.x, this.y - this.speed)) {
             this.y -= this.speed;
+            isMoving = true;
         }
         if (this._catController.isGoingRight && parent.canMoveChildTo(this, this.x + this.speed, this.y)) {
             this.scale.x = -Math.abs(this.scale.x)
             this.x += this.speed;
+            isMoving = true;
         }
         if (this._catController.isGoingDown && parent.canMoveChildTo(this, this.x, this.y + this.speed)) {
             this.y += this.speed;
+            isMoving = true;
         }
 
         if (this._catController.isGoingLeft && parent.canMoveChildTo(this, this.x - this.speed, this.y)) {
             this.scale.x = Math.abs(this.scale.x)
             this.x -= this.speed;
+            isMoving = true;
         }
+        if (isMoving) { this.setCatState(CatState.Walking) }
+        else if (this._catState === CatState.Walking) { this.setCatState(CatState.Standing)}
     }
 }
 
