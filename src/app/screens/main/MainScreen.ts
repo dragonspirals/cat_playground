@@ -14,6 +14,7 @@ import { Background, BackgroundSettings } from "../../displayElements/Background
 import { BoundedContainer } from "../../displayElements/BoundedContainer.ts";
 import { CatKeyboardController } from "../../controllers/CatController.ts";
 import { IdleController } from "../../controllers/IdleController.ts";
+import { randomArrayElement } from "../../utils/TypeUtils.ts";
 
 /** The screen that holds the app */
 export class MainScreen extends Container  {
@@ -28,6 +29,7 @@ export class MainScreen extends Container  {
     private cats: Cat[]=[];
     private _settings: MainScreenSettings = DefaultMainScreenSettings;
     private paused = false;
+    private catColors: string[] =  ["black", "grey", "orange", "white", "kyle", "silverBengal", "snowLeopard"]
 
     constructor() {
         super();
@@ -39,14 +41,8 @@ export class MainScreen extends Container  {
         this.floor = new Background(this._settings.floor)
         this.mainContainer.addChild(this.floor)
         this.createCat(true)
-        this.createCat(false, "black")
-        this.createCat(false, "grey")
-        // this.cat = new Cat(this._settings.cat, new IdleController())
-        // this.cat.y = this.cat.height/2
-        // const cat = new Cat({...this._settings.cat, color: "preload/cat/black"}, new CatKeyboardController());
-        // cat.x = cat.y = this.cat.height/2
-        // this.mainContainer.addChild(cat);
-        // this.mainContainer.addChild(this.cat);
+
+        this.createIdleCats(5)
         
         const buttonAnimations = {
             hover: {
@@ -163,12 +159,32 @@ export class MainScreen extends Container  {
         }
     }
 
-    private createCat(isUserControlled: boolean = false, color: string = "orange")
+    private getNewColor(): string
+    { 
+        const color = randomArrayElement(this.catColors);
+        this.catColors.splice(this.catColors.indexOf(color), 1)
+        return color;
+    }
+
+    private createIdleCats(catCount: number)
+    {
+        if (catCount >= this.catColors.length)
+        {
+            console.warn("too many cats for the number of colors")
+        }
+        for (let i=0; i<catCount; i++)
+        {
+            this.createCat(false, this.getNewColor())
+        }
+    }
+
+    private createCat(isUserControlled: boolean = false, color: string = "babyLeo")
     {
         const controller = isUserControlled ? new CatKeyboardController() : new IdleController();
         const cat = new Cat({...this._settings.cat, color: "preload/cat/" + color}, controller)
         this.mainContainer.addChild(cat);
-        cat.y += this.cats.length * cat.height;
+        cat.y += (this.cats.length % 3) * cat.height;
+        cat.x += Math.floor(this.cats.length / 3) * cat.width
         this.cats.push(cat)
     }
 }
