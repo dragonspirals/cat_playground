@@ -1,5 +1,6 @@
 import { BLEND_MODES, FillInput, FillPattern, Graphics, Matrix, PatternRepetition, Texture } from "pixi.js";
-import { BoundedContainer, BoundedContainerSettings } from "./BoundedContainer";
+import { BoundedContainer } from "./BoundedContainer";
+import { ContainerSettings } from "./ResizableContainer";
 
 export class Background<TSettings extends BackgroundSettings = BackgroundSettings> extends BoundedContainer<TSettings>
 {
@@ -17,16 +18,17 @@ export class Background<TSettings extends BackgroundSettings = BackgroundSetting
     public resize(width: number, height: number)
     {
         super.resize(width, height);
-        this._fill.clear().rect(0, 0, width, height)
+        this._fill.clear().rect(-width/2, -height/2, width, height)
             .fill(this._settings.fill)
         this.addPattern()
+
     }
 
     private fillBackground(): Graphics
     {
         const graphics = new Graphics();
         this.addChild(graphics);
-        graphics.rect(0, 0, this.width, this.height)
+        graphics.rect(-this.width/2, -this.height/2, this.width, this.height)
             .fill(this._settings.fill)
         return graphics
     }
@@ -40,7 +42,7 @@ export class Background<TSettings extends BackgroundSettings = BackgroundSetting
         fillPattern.transform = new Matrix().scale(this.height/this.width, 1) // scale it to retain aspect ratio
         if (this._settings.pattern.transform) {fillPattern.transform.append(this._settings.pattern.transform)}
         
-        this._pattern.rect(0, 0, this.width, this.height)
+        this._pattern.rect(-this.width/2, -this.height/2, this.width, this.height)
         this._pattern.fill(fillPattern)
         this._pattern.blendMode = this._settings.pattern.blendMode ?? "normal"
     }
@@ -55,7 +57,7 @@ export interface FillPatternSettings
     blendMode?: BLEND_MODES
 }
 
-export interface BackgroundSettings extends BoundedContainerSettings
+export interface BackgroundSettings extends ContainerSettings
 {
     fill: FillInput;
     pattern?: FillPatternSettings

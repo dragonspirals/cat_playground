@@ -8,21 +8,7 @@ export enum CatState { Walking, Standing, Sitting, Sleeping }
 export class Cat extends BoundedContainer<CatSettings> {
     public speed!: number;
 
-    get left() {
-        return -this.width * 0.5;
-    }
-
-    get right() {
-        return this.width * 0.5;
-    }
-
-    get top() {
-        return -this.height * 0.5;
-    }
-
-    get bottom() {
-        return this.height * 0.5;
-    }
+    public get top() { return this.y + this.height/2 - 30 - this.pivot.y }
 
     private _catState: CatState = CatState.Sleeping;
 

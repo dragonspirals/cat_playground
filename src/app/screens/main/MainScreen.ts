@@ -124,11 +124,10 @@ export class MainScreen extends Container  {
         this.mainContainer.y = centerY;
         const floorFraction = 0.65
         this.floor.resize(width, height * floorFraction)
-        this.floor.y = -height * (floorFraction - 0.5)
+        this.floor.position.set(0, height/2)
         this.wall.resize(width, height * (1 - floorFraction))
-        this.wall.y = -height/2
-        this.logo.x = -this.logo.width/2
-        this.logo.y = height/2 - this.logo.height + 10
+        this.wall.position.set(0, -height/2)
+        this.logo.position.set(-this.logo.width/2, height/2 - this.logo.height + 10);
         this.mainContainer.addChildAt(this.logo, this.mainContainer.children.length - 1)
 
         this.pauseButton.x = 30;
@@ -228,6 +227,7 @@ export const DefaultMainScreenSettings: MainScreenSettings =
 {
     wall:
     {
+        anchor: { x: 0.5, y: 0 },
         fill: wallGradient,
         pattern: 
         {
@@ -235,24 +235,18 @@ export const DefaultMainScreenSettings: MainScreenSettings =
             source: "tile_texture.jpg", 
             repeat: "repeat", 
             transform: new Matrix().scale(0.2, 0.2)
-        },
+        }
     },
     floor: 
     {
         fill: floorGradient, 
+        anchor: { x: 0.5, y: 1 },
         pattern: {
             source: "herringbone_texture.jpg", 
             transform: new Matrix().rotate(Math.PI/6).scale(0.6, 0.2),
             repeat: "repeat",
             blendMode: "add"
         },
-        moveChildCheck: (child, newChildPos, currentSize, currentPos) => {
-            const isWithinLeft = newChildPos.x - child.width/2 >= currentPos.x 
-            const isWithinRight = newChildPos.x + child.width/2 <= currentSize.width + currentPos.x
-            const isWithinTop = newChildPos.y + child.height/2 >= currentPos.y + 30
-            const isWithinBottom = newChildPos.y + child.height/2 <= currentSize.height + currentPos.y
-            return isWithinLeft && isWithinRight && isWithinBottom && isWithinTop;
-        }
     },
     cat: 
     {
