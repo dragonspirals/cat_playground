@@ -1,9 +1,11 @@
 import * as PIXI from "pixi.js"
 import { ContainerSettings, ResizableContainer } from "../displayElements/ResizableContainer";
+import { Position } from "../displayElements/BoundedContainer";
 
 
 export class Ball<TSettings extends BallSettings = BallSettings> extends ResizableContainer<TSettings>
 {
+    public speed: Position = { x: 0, y: 0 }
     private _ballGraphics: PIXI.Graphics = new PIXI.Graphics();
     private _shadowGraphics: PIXI.Graphics = new PIXI.Graphics();
     private _isDragging: boolean = false
@@ -27,6 +29,8 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Resizab
         {
             if (!this._isDragging || !this.parent) { return; }
             this.position = this.parent.toLocal(e.global)
+            this.speed.x = e.movementX
+            this.speed.y = e.movementY
         }) 
         mainContainer.addEventListener("mouseup", () => this._isDragging = false)
 
@@ -34,7 +38,9 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Resizab
 
     public update()
     {
-
+        if (this._isDragging ){ return; }
+        this.x += this.speed.x
+        this.y += this.speed.y
     }
 
     private startDragging()
