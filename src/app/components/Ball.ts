@@ -27,7 +27,6 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Resizab
         {
             if (!this._isDragging || !this.parent) { return; }
             this.position = this.parent.toLocal(e.global)
-            console.log(e.global)
         }) 
         mainContainer.addEventListener("mouseup", () => this._isDragging = false)
 
