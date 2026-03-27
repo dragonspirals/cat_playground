@@ -237,8 +237,9 @@ export const DefaultMainScreenSettings: MainScreenSettings =
 {
     ball:
     {
-        radius: 20,
+        radius: 25,
         color: "#ff7979",
+        asset: "yarn.png",
         friction: 0.99
     },
     wall:

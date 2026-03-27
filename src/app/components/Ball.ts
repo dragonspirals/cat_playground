@@ -7,7 +7,7 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Resizab
 {
     public speed: Position = { x: 0, y: 0 }
     private _friction: number;
-    private _ballGraphics: PIXI.Graphics = new PIXI.Graphics();
+    private _ballObject!: PIXI.Graphics | PIXI.Sprite;
     private _shadowGraphics: PIXI.Graphics = new PIXI.Graphics();
     private _isDragging: boolean = false
     constructor(public settings:TSettings)
@@ -24,9 +24,9 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Resizab
         if (!this.parent) { return; }
         const mainContainer = this.parent
         mainContainer.eventMode = "dynamic"
-        this._ballGraphics.eventMode = "dynamic";
-        this._ballGraphics.on("pointerdown", () => this.startDragging())
-        this._ballGraphics.cursor = "pointer"
+        this._ballObject.eventMode = "dynamic";
+        this._ballObject.on("pointerdown", () => this.startDragging())
+        this._ballObject.cursor = "pointer"
         mainContainer.on("pointermove", (e) =>
         {
             if (!this._isDragging || !this.parent) { return; }
@@ -49,6 +49,7 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Resizab
         if (this.bottom >= container.bottom) { this.speed.y = -Math.abs(this.speed.y)}
         this.speed.x = this._friction * this.speed.x;
         this.speed.y = this._friction * this.speed.y
+        this._ballObject.rotation += this.speed.x / (Math.PI * this.settings.radius)
     }
 
     private startDragging()
@@ -59,8 +60,17 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Resizab
 
     private drawBall()
     {
-        this.addChild(this._ballGraphics)
-        this._ballGraphics.circle(0, 0, this._settings.radius).fill(this._settings.color);                                                
+        if (this.settings.asset)
+        {
+            const texture = PIXI.Texture.from(this.settings.asset)
+            this._ballObject = new PIXI.Sprite({texture, scale: 2*this.settings.radius/texture.width  });
+            this.addChild(this._ballObject);
+            this._ballObject.pivot.set(this.settings.radius / this._ballObject.scale.x, this.settings.radius / this._ballObject.scale.y)
+            return;
+        }
+        this._ballObject = new PIXI.Graphics()
+        this.addChild(this._ballObject)
+        this._ballObject.circle(0, 0, this._settings.radius).fill(this._settings.color);                                                
     }
 
     private drawShadow()
@@ -75,6 +85,7 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Resizab
 export interface BallSettings extends ContainerSettings
 {
     color: PIXI.ColorSource,
+    asset?: string;
     radius: number,
     /** between [0, 1] - 1 is no friction, 0 is infinite friction */
     friction?: number
