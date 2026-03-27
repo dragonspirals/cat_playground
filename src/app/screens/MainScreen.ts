@@ -16,6 +16,7 @@ import { CatKeyboardController } from "../controllers/CatController.ts";
 import { IdleController } from "../controllers/IdleController.ts";
 import { randomArrayElement } from "../utils/TypeUtils.ts";
 import { Ball, BallSettings } from "../components/Ball.ts";
+import { Backpack, BackpackSettings, defaultBackpackSettings } from "../components/Backpack.ts";
 
 /** The screen that holds the app */
 export class MainScreen extends Container  {
@@ -27,6 +28,7 @@ export class MainScreen extends Container  {
     private wall: Background;
     private logo!: Sprite;
     private ball!: Ball;
+    private backpack!: Backpack;
     private pauseButton: FancyButton;
     private settingsButton: FancyButton;
     private cats: Cat[]=[];
@@ -55,8 +57,10 @@ export class MainScreen extends Container  {
 
         this.ball = new Ball(this._settings.ball)
         this.ball.position.set(50, this.width/2 - 50)
-        this.mainContainer.addChild(this.ball)
-        // this.ball.updateMouseEvent(this.mainContainer)
+        this.mainContainer.addChild(this.ball);
+        this.backpack = new Backpack(this._settings.backpack);
+        this.mainContainer.addChild(this.backpack)
+        this.backpack.addToBackpack(this.ball)
         
         const buttonAnimations = {
             hover: {
@@ -134,11 +138,13 @@ export class MainScreen extends Container  {
         const floorFraction = 0.65
         this.floor.resize(width, height * floorFraction)
         this.floor.position.set(0, height/2)
+        this.backpack.updateLocalTransform()
+        this.backpack.position.set(-width/2, height/2)
         this.wall.resize(width, height * (1 - floorFraction))
         this.wall.position.set(0, -height/2)
         this.logo.position.set(-this.logo.width/2, height/2 - this.logo.height + 10);
         this.mainContainer.addChildAt(this.logo, this.mainContainer.children.length - 1)
-
+        this.backpack.resize();
         this.pauseButton.x = 30;
         this.pauseButton.y = 30;
         this.settingsButton.x = width - 30
@@ -212,6 +218,7 @@ export interface MainScreenSettings extends ContainerOptions
     floor: BackgroundSettings;
     wall: BackgroundSettings;
     ball: BallSettings;
+    backpack: BackpackSettings;
 }
 
 const floorGradient: FillGradient = new FillGradient({
@@ -235,6 +242,7 @@ const wallGradient: FillGradient = new FillGradient({type: 'linear',
 
 export const DefaultMainScreenSettings: MainScreenSettings = 
 {
+    backpack: defaultBackpackSettings,
     ball:
     {
         radius: 25,
