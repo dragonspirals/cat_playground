@@ -48,6 +48,7 @@ export class MainScreen extends Container  {
 
 
         this.logo =  new Sprite({texture: Texture.from("playground-logo.png")});
+        this.logo.zIndex = 4
         this.mainContainer.addChild(this.logo)
         this.logo.scale = 0.3
 
@@ -104,13 +105,15 @@ export class MainScreen extends Container  {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public update(_time: Ticker) {
         if (this.paused) return;
-        const sortableObjects =  [...this.cats, this.ball]
+        const sortableObjects =  [...this.cats, ...this.backpack.items ]
         sortableObjects.sort((catA, catB) => catA.bottom - catB.bottom)
         sortableObjects.forEach((cat) => 
         {
             cat.parent?.addChildAt(cat, cat.parent.children.length - 1)
-            cat.update(this.floor)
+            // cat.update(this.floor)
         });
+        this.cats.forEach((cat) => cat.update(this.floor))
+        this.backpack.updateItems(this.floor)
     }
 
     /** Pause gameplay - automatically fired when a popup is presented */

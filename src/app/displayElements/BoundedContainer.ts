@@ -11,5 +11,11 @@ export class BoundedContainer<TSettings extends ContainerSettings =ContainerSett
         const isWithinBottom = child.bottom - child.y + newY <= this.bottom
         return isWithinLeft && isWithinRight && isWithinBottom && isWithinTop;
     }
+
+    public isIntersecting(otherObject: BoundedContainer): boolean
+    {
+        return otherObject.right >= this.left && otherObject.left <= this.right
+            && otherObject.bottom >= this.top && otherObject.top <= this.bottom
+    }
 }
 export interface Position { x: number, y: number }

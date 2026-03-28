@@ -3,7 +3,7 @@ import { ContainerSettings, ResizableContainer } from "../displayElements/Resiza
 import { BoundedContainer, Position } from "../displayElements/BoundedContainer";
 
 
-export class DynamicObject<TSettings extends DynamicObjectSettings = DynamicObjectSettings> extends ResizableContainer<TSettings>
+export class DynamicObject<TSettings extends DynamicObjectSettings = DynamicObjectSettings> extends BoundedContainer<TSettings>
 {
     public speed: Position = { x: 0, y: 0 }
     protected _friction: number;
@@ -31,8 +31,7 @@ export class DynamicObject<TSettings extends DynamicObjectSettings = DynamicObje
             this.speed.x = e.movementX
             this.speed.y = e.movementY
         }) 
-        this.parent.addEventListener("pointerup", () => this._isDragging = false)
-
+        this.parent.addEventListener("pointerup", () => this.handleMouseUp())
     }
 
     public update(container: BoundedContainer)
@@ -46,6 +45,11 @@ export class DynamicObject<TSettings extends DynamicObjectSettings = DynamicObje
         if (this.bottom >= container.bottom) { this.speed.y = -Math.abs(this.speed.y)}
         this.speed.x = this._friction * this.speed.x;
         this.speed.y = this._friction * this.speed.y
+    }
+
+    protected handleMouseUp()
+    {
+        this._isDragging = false;
     }
 
     protected startDragging()

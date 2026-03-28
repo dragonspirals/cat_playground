@@ -1,23 +1,34 @@
 import { ColorSource, Graphics, Size, Sprite, Texture } from "pixi.js";
-import { ContainerSettings, ResizableContainer } from "../displayElements/ResizableContainer";
+import { ContainerSettings } from "../displayElements/ResizableContainer";
 import { DynamicObject } from "./DynamicObject";
+import { BoundedContainer } from "../displayElements/BoundedContainer";
 type BackpackItem = 
 {
     item: DynamicObject;
     isStashed: boolean;
 }
 
-export class Backpack extends ResizableContainer<BackpackSettings>
+export class Backpack extends BoundedContainer<BackpackSettings>
 {
     private _backpackImage!: Sprite;
     private _background: Graphics = new Graphics();
     private _items: BackpackItem[] = [];
+    public get items() { return this._items.map((item)=> item.item) }
 
     constructor(protected _settings: BackpackSettings)
     {
         super(_settings)
         this.createElements();
         this.setPivotFromAnchor(_settings.background.size.width, _settings.background.size.height);
+    }
+
+    public updateItems(container: BoundedContainer)
+    {
+        this._items.forEach((item) =>
+        {
+            if (!item.isStashed) { item.item.update(container)}
+            item.item.zIndex = item.isStashed ? this.zIndex + 1 : 0;
+        })
     }
 
     public resize(width: number, height: number)
