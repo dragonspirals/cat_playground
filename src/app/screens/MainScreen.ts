@@ -108,7 +108,7 @@ export class MainScreen extends Container  {
         sortableObjects.sort((catA, catB) => catA.bottom - catB.bottom)
         sortableObjects.forEach((cat) => 
         {
-            cat.parent?.addChildAt(cat, cat.parent.children.length -2)
+            cat.parent?.addChildAt(cat, cat.parent.children.length - 1)
             cat.update(this.floor)
         });
     }
@@ -133,22 +133,17 @@ export class MainScreen extends Container  {
         const centerX = width * 0.5;
         const centerY = height * 0.5;
 
-        this.mainContainer.x = centerX;
-        this.mainContainer.y = centerY;
+        this.mainContainer.position.set(centerX, centerY);
         const floorFraction = 0.65
         this.floor.resize(width, height * floorFraction)
         this.floor.position.set(0, height/2)
-        this.backpack.updateLocalTransform()
-        this.backpack.position.set(-width/2, height/2)
         this.wall.resize(width, height * (1 - floorFraction))
         this.wall.position.set(0, -height/2)
         this.logo.position.set(-this.logo.width/2, height/2 - this.logo.height + 10);
-        this.mainContainer.addChildAt(this.logo, this.mainContainer.children.length - 1)
-        this.backpack.resize();
-        this.pauseButton.x = 30;
-        this.pauseButton.y = 30;
-        this.settingsButton.x = width - 30
-        this.settingsButton.y = 30;
+        this.backpack.zIndex = 2;
+        this.backpack.resize(width, height);
+        this.pauseButton.position.set(30, 30);
+        this.settingsButton.position.set(width - 30, 30);
     }
 
     /** Show screen with animations */

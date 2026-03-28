@@ -20,6 +20,7 @@ export class Background<TSettings extends BackgroundSettings = BackgroundSetting
         super.resize(width, height);
         this.drawRect(this._fill, width, height).fill(this._settings.fill)
         this.addPattern()
+        this.position.set(0, height/2)
     }
     
     private drawRect(fill: Graphics, width?: number, height?: number): Graphics

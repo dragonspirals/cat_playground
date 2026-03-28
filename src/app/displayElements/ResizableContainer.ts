@@ -9,7 +9,12 @@ export class ResizableContainer<TSettings extends ContainerSettings = ContainerS
     public get top() { return this.y - this.height/2 - this.pivot.y }
     public get bottom() { return this.y + this.height/2 - this.pivot.y }
             
-    constructor(protected _settings: TSettings) { super(_settings) } 
+    constructor(protected _settings: TSettings) 
+    { 
+        super(_settings);
+        if (this._settings.zIndex) { this.zIndex = this._settings.zIndex }
+    }
+
     public resize(width: number, height: number) {
         this.setSize(width, height)
         this.x = -width/2;
@@ -41,4 +46,5 @@ export interface ContainerSettings extends ContainerOptions
 {
     /** x, y from 0-1 where 0.5 is the center */
     anchor?: { x: number, y: number }
+    zIndex?: number;
 }

@@ -1,79 +1,42 @@
 import * as PIXI from "pixi.js"
-import { ContainerSettings, ResizableContainer } from "../displayElements/ResizableContainer";
 import { BoundedContainer, Position } from "../displayElements/BoundedContainer";
+import { DynamicObject, DynamicObjectSettings } from "./DynamicObject";
 
 
-export class Ball<TSettings extends BallSettings = BallSettings> extends ResizableContainer<TSettings>
+export class Ball<TSettings extends BallSettings = BallSettings> extends DynamicObject<TSettings>
 {
     public speed: Position = { x: 0, y: 0 }
-    private _friction: number;
-    private _ballObject!: PIXI.Graphics | PIXI.Sprite;
     private _shadowGraphics: PIXI.Graphics = new PIXI.Graphics();
-    private _isDragging: boolean = false
     constructor(public settings:TSettings)
     {
-        super(settings)
-        this._friction = this.settings.friction ?? 1;
-        this.drawBall()
+        super(settings);
         this.drawShadow()
-        this.onParentChanged.on(() => this.updateMouseEvent())
-    }
-
-    public updateMouseEvent()
-    {
-        if (!this.parent) { return; }
-        const mainContainer = this.parent
-        mainContainer.eventMode = "dynamic"
-        this._ballObject.eventMode = "dynamic";
-        this._ballObject.on("pointerdown", () => this.startDragging())
-        this._ballObject.cursor = "pointer"
-        mainContainer.on("pointermove", (e) =>
-        {
-            if (!this._isDragging || !this.parent) { return; }
-            this.position = this.parent.toLocal(e.global)
-            this.speed.x = e.movementX
-            this.speed.y = e.movementY
-        }) 
-        mainContainer.addEventListener("pointerup", () => this._isDragging = false)
-
     }
 
     public update(container: BoundedContainer)
     {
         if (this._isDragging) { return; }
-        this.x += this.speed.x
-        this.y += this.speed.y
-        if (this.left <= container.left) { this.speed.x = Math.abs(this.speed.x) }
-        if (this.right >= container.right) { this.speed.x = -Math.abs(this.speed.x) }
-        if (this.top <= container.top) { this.speed.y = Math.abs(this.speed.y) }
-        if (this.bottom >= container.bottom) { this.speed.y = -Math.abs(this.speed.y)}
-        this.speed.x = this._friction * this.speed.x;
-        this.speed.y = this._friction * this.speed.y
-        this._ballObject.rotation += this.speed.x / (Math.PI * this.settings.radius)
+        super.update(container);
+        this._object.rotation += this.speed.x / (Math.PI * this.settings.radius)
     }
 
-    private startDragging()
-    {
-        console.log("dragging")
-        this._isDragging = true;
-    }
-
-    private drawBall()
+    protected drawObject()
     {
         if (this.settings.asset)
         {
             const texture = PIXI.Texture.from(this.settings.asset)
-            this._ballObject = new PIXI.Sprite({texture, scale: 2*this.settings.radius/texture.width  });
-            this.addChild(this._ballObject);
-            this._ballObject.pivot.set(this.settings.radius / this._ballObject.scale.x, this.settings.radius / this._ballObject.scale.y)
+            this._object = new PIXI.Sprite({texture, scale: 2*this.settings.radius/texture.width  });
+            this.addChild(this._object);
+            this._object.pivot.set(this.settings.radius / this._object.scale.x, this.settings.radius / this._object.scale.y)
             return;
         }
-        this._ballObject = new PIXI.Graphics()
-        this.addChild(this._ballObject)
-        this._ballObject.circle(0, 0, this._settings.radius).fill(this._settings.color);                                                
+        const object = new PIXI.Graphics()
+        this.addChild(object)
+        object.circle(0, 0, this._settings.radius).fill(this._settings.color);        
+        this._object = object;                                        
     }
 
-    private drawShadow()
+    protected drawShadow()
     {
         this._shadowGraphics.blendMode = 'multiply'
         this._shadowGraphics.ellipse(0, this._settings.radius, this._settings.radius, 5).fill("#22213f")
@@ -82,11 +45,9 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Resizab
     }
 }
 
-export interface BallSettings extends ContainerSettings
+export interface BallSettings extends DynamicObjectSettings
 {
     color: PIXI.ColorSource,
     asset?: string;
     radius: number,
-    /** between [0, 1] - 1 is no friction, 0 is infinite friction */
-    friction?: number
 }
