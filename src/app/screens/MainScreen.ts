@@ -143,7 +143,7 @@ export class MainScreen extends Container  {
         this.floor.position.set(0, height/2)
         this.wall.resize(width, height * (1 - floorFraction))
         this.wall.position.set(0, -height/2)
-        this.logo.position.set(-this.logo.width/2, height/2 - this.logo.height + 10);
+        this.logo.position.set(width/2 - this.logo.width, height/2 - this.logo.height + 10);
         this.backpack.zIndex = 2;
         this.backpack.resize(width, height);
         this.pauseButton.position.set(30, 30);
