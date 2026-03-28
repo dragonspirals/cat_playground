@@ -21,9 +21,8 @@ export class Backpack extends BoundedContainer<BackpackSettings>
     {
         this._items.forEach((item) =>
         {
-            if (!item.isStashed) { item.update(container)}
-            // item.isStashed = this.isIntersecting(item.item);
-            item.zIndex = item.isStashed ? this.zIndex + 1 : 0;
+            if (!item.isStashed.value) { item.update(container)}
+            item.zIndex = item.isStashed.value ? this.zIndex + 1 : 0;
         })
     }
 
@@ -39,6 +38,7 @@ export class Backpack extends BoundedContainer<BackpackSettings>
         {
             this._items.push(item);
             item.setBackpack(this);
+            item.isStashed.onChanged(() => this.moveStashedItems())
             if (!item.parent || !this.parent){ return; }
             item.position = this.parent?.toGlobal(this.position)
         })
@@ -46,17 +46,19 @@ export class Backpack extends BoundedContainer<BackpackSettings>
 
     public stashAll()
     {
-        this._items.forEach((item) => item.isStashed = true)
+        this._items.forEach((item) => item.isStashed.value = true)
         this.moveStashedItems();
     }
 
     private moveStashedItems()
     {
         let startingPosition = this.position.x + this._backpackImage.width + 50;
+        
         this._items.forEach((item) => 
         {  
-            if (!item.parent || !item.isStashed){ return; }
-            item.zIndex = this.zIndex + 1;
+            item.zIndex = item.isStashed.value ? this.zIndex + 1 : 0;
+
+            if (!item.parent || !item.isStashed.value){ return; }
             item.position.set(startingPosition, this.position.y - 60 );
             item.speed = { x: 0, y: 0 }
             startingPosition += item.width;

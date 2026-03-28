@@ -6,17 +6,22 @@ export class Observable<T>
     private _onChangedEvent: BasicEvent = new BasicEvent();
     public get value() 
     { 
-        this._onChangedEvent.fire()
         return this._value; 
     }
     public set value(val: T) 
     { 
-        this._onChangedEvent.fire()
+        if (val === this._value) { return; }
         this._value = val; 
+        this._onChangedEvent.fire()
     }
 
     constructor(initialValue: T)
     {
         this._value = initialValue
+    }
+
+    public onChanged(callback: () => unknown )
+    {
+        this._onChangedEvent.on(callback)
     }
 }

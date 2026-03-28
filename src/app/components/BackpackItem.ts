@@ -4,9 +4,7 @@ import { DynamicObject, DynamicObjectSettings } from "./DynamicObject";
 
 export class BackpackItem<TSettings extends DynamicObjectSettings = DynamicObjectSettings> extends DynamicObject<TSettings>
 {
-    protected _isStashed: Observable<boolean> = new Observable(true);
-    public get isStashed(){ return this._isStashed.value}
-    public set isStashed(val: boolean){ this._isStashed.value = val }
+    public isStashed: Observable<boolean> = new Observable(true);
     protected _backpack!: Backpack;
 
     public setBackpack(backpack: Backpack)
@@ -18,6 +16,6 @@ export class BackpackItem<TSettings extends DynamicObjectSettings = DynamicObjec
     {
         this._isDragging = false;
         if (!this._backpack) { return; }
-        this._isStashed.value = this.isIntersecting(this._backpack)
+        this.isStashed.value = this.isIntersecting(this._backpack)
     }
 }
