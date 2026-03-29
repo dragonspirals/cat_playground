@@ -5,6 +5,8 @@ export abstract class ICatController
 {
     public abstract get activeDirections(): boolean[];
     public abstract catState: CatState;
+
+    public abstract handleCatCollision(): void
     public abstract get isGoingUp(): boolean;
     public abstract get isGoingDown(): boolean;
     public abstract get isGoingLeft(): boolean;
@@ -25,6 +27,10 @@ export class CatKeyboardController implements ICatController
     constructor()
     {
         this._keyboardInput = this.registerKeyboardInput()
+    }
+
+    public handleCatCollision()
+    {
     }
 
     private registerKeyboardInput(): KeyboardInput

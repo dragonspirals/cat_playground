@@ -39,6 +39,14 @@ export class Cat extends BoundedContainer<CatSettings> {
         this.move(parent);
     }
 
+    public handleCollision(otherObject?: BoundedContainer): void
+    {
+        if (otherObject instanceof Cat)
+        {
+            this._catController.handleCatCollision()
+        }
+    }
+
     private setCatState(newState: CatState)
     {
         if (newState === this._catState) { return; }

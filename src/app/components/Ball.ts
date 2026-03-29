@@ -44,6 +44,11 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Backpac
         this.addChildAt(this._shadowGraphics, 0)
         this._shadowGraphics.filters = new PIXI.BlurFilter({strength: 3, quality: 3, resolution: 3, kernelSize: 5}) 
     }
+
+    public handleCollision(): void
+    {
+        this.speed = { x: 0, y: 0 }
+    }
 }
 
 export interface BallSettings extends DynamicObjectSettings

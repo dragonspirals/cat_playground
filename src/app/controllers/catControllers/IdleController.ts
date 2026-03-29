@@ -25,6 +25,14 @@ export class IdleController implements ICatController
         this._ticker.add(() => this.randomStart())
     }
 
+    public handleCatCollision()
+    {
+        this._isGoingUp.value = !this._isGoingUp.value;
+        this._isGoingDown.value = !this._isGoingDown.value;
+        this._isGoingLeft.value = !this._isGoingLeft.value;
+        this._isGoingRight.value = !this._isGoingRight.value;
+    }
+
     private randomStart(): boolean
     {
         if (Math.random() > 0.01) { return false; }
