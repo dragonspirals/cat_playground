@@ -27,10 +27,10 @@ export class IdleController implements ICatController
 
     public handleCatCollision()
     {
-        this._isGoingUp.value = !this._isGoingUp.value;
-        this._isGoingDown.value = !this._isGoingDown.value;
-        this._isGoingLeft.value = !this._isGoingLeft.value;
-        this._isGoingRight.value = !this._isGoingRight.value;
+        this._isGoingUp.value = false;
+        this._isGoingDown.value = false;
+        this._isGoingLeft.value = false;
+        this._isGoingRight.value = false;
     }
 
     private randomStart(): boolean

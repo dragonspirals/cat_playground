@@ -1,12 +1,13 @@
 import * as PIXI from "pixi.js"
-import { BoundedContainer, Position } from "../displayElements/BoundedContainer";
-import { DynamicObjectSettings } from "./DynamicObject";
+import { BoundedContainer } from "../displayElements/BoundedContainer";
+import { DynamicObject, DynamicObjectSettings } from "./DynamicObject";
 import { BackpackItem } from "./BackpackItem";
+import * as VECTOR from "../utils/Vector.ts"
 
 
 export class Ball<TSettings extends BallSettings = BallSettings> extends BackpackItem<TSettings>
 {
-    public speed: Position = { x: 0, y: 0 }
+    public speed: VECTOR.Position = { x: 0, y: 0 }
     private _shadowGraphics: PIXI.Graphics = new PIXI.Graphics();
     constructor(public settings:TSettings)
     {
@@ -45,9 +46,13 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Backpac
         this._shadowGraphics.filters = new PIXI.BlurFilter({strength: 3, quality: 3, resolution: 3, kernelSize: 5}) 
     }
 
-    public handleCollision(): void
+    public handleCollision(otherObject?: DynamicObject): void
     {
-        this.speed = { x: 0, y: 0 }
+        if (!otherObject) 
+        { 
+            this.speed = { x: 0, y: 0 }
+            return; 
+        }
     }
 }
 

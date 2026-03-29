@@ -1,17 +1,19 @@
 import * as PIXI from "pixi.js"
 import { ContainerSettings } from "../displayElements/ResizableContainer";
-import { BoundedContainer, Position } from "../displayElements/BoundedContainer";
-
+import { BoundedContainer } from "../displayElements/BoundedContainer";
+import { Position } from "../utils/Vector";
 
 export class DynamicObject<TSettings extends DynamicObjectSettings = DynamicObjectSettings> extends BoundedContainer<TSettings>
 {
     public speed: Position = { x: 0, y: 0 }
+    public weight: number;
     protected _friction: number;
     protected _isDragging: boolean = false
     protected _object!: PIXI.ViewContainer
     constructor(public settings:TSettings)
     {
         super(settings);
+        this.weight = settings.weight ?? 1;
         this.drawObject();
         this.onParentChanged.on(() => this.updateMouseEvent());
         this._friction = this.settings.friction ?? 1;
@@ -67,4 +69,5 @@ export interface DynamicObjectSettings extends ContainerSettings
 {
     /** between [0, 1] - 1 is no friction, 0 is infinite friction */
     friction?: number
+    weight?: number
 }

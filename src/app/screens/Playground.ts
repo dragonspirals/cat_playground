@@ -35,7 +35,7 @@ export class Playground extends BoundedContainer<PlaygroundSettings>
 
         this.createCat(true)
 
-        this.createIdleCats(5)
+        // this.createIdleCats(5)
 
         this.backpack = new Backpack(this._settings.backpack);
         this.addChild(this.backpack)
@@ -155,9 +155,11 @@ export const DefaultPlaygroundSettings: PlaygroundSettings =
             radius: 25,
             color: "#ff7979",
             asset: "yarn.png",
-            friction: 0.96
+            friction: 0.96,
+            weight: 0.5
         },
         {
+            weight: 0.2,
             radius: 15,
             color: "#ff7979",
             friction: 0.99
@@ -178,7 +180,7 @@ export const DefaultPlaygroundSettings: PlaygroundSettings =
     {
         desiredWidth: 150,
         color: "preload/cat/orange",
-        scale: 1.2,
+        scale: 0.8,
         sleeping: "cat_sleep.svg", 
         walkingFrames: ["cat_walk.svg", "cat_walk2.svg"], 
         sitting: "cat_sit.svg", 

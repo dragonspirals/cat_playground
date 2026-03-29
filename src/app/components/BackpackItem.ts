@@ -1,14 +1,29 @@
 import { Observable } from "../utils/Observable";
 import { Backpack } from "./Backpack";
-import { DynamicObject } from "./DynamicObject";
+import { DynamicObject, DynamicObjectSettings } from "./DynamicObject";
 
-export class BackpackItem extends DynamicObject
+export class BackpackItem<TSettings extends DynamicObjectSettings = DynamicObjectSettings> extends DynamicObject<TSettings>
 {
-    private _isStashed: Observable<boolean> = new Observable(true)
-    public get isStashed() { return this._isStashed.value}
+    public isStashed: Observable<boolean> = new Observable(true);
+    protected _backpack!: Backpack;
 
-    public checkStashed(backpack: Backpack)
+    public setBackpack(backpack: Backpack)
     {
-        if (this.isIntersecting(backpack)) { this._isStashed.value = true}
+        this._backpack = backpack
+    }
+
+    protected handleMouseUp()
+    {
+        this._isDragging = false;
+        if (!this._backpack) { return; }
+        this.isStashed.value = this.isIntersecting(this._backpack);
+        this.zIndex = this.isStashed.value ? this._backpack.zIndex + 1 : 0
+    }
+
+    protected startDragging()
+    {
+        super.startDragging();
+        if (!this._backpack) { return; }
+        this.zIndex = this._backpack.zIndex + 1 ;
     }
 }
