@@ -65,7 +65,7 @@ export class Backpack extends BoundedContainer<BackpackSettings>
 
             if (!item.parent || !item.isStashed.value){ return; }
             item.position.set(startingPosition, this.position.y - 60 );
-            item.speed = { x: 0, y: 0 }
+            item.speed = { x: 0, y: 0, z: 0 }
             startingPosition += item.width;
         })
     }

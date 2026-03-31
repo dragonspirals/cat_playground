@@ -7,6 +7,12 @@ export class BackpackItem<TSettings extends DynamicObjectSettings = DynamicObjec
     public isStashed: Observable<boolean> = new Observable(true);
     protected _backpack!: Backpack;
 
+    constructor(settings: TSettings)
+    {
+        super(settings);
+        this._isDragging.onChanged(() => this.zIndex = (this._isDragging.value || this.isStashed ? this._backpack.zIndex + 1 : 0))
+    }
+
     public setBackpack(backpack: Backpack)
     {
         this._backpack = backpack
@@ -14,7 +20,7 @@ export class BackpackItem<TSettings extends DynamicObjectSettings = DynamicObjec
 
     protected handleMouseUp()
     {
-        this._isDragging = false;
+        this._isDragging.value = false;
         if (!this._backpack) { return; }
         this.isStashed.value = this.isIntersecting(this._backpack);
         this.zIndex = this.isStashed.value ? this._backpack.zIndex + 1 : 0

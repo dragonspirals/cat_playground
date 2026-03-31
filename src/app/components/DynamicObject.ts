@@ -1,18 +1,19 @@
 import * as PIXI from "pixi.js"
 import { ContainerSettings } from "../displayElements/ResizableContainer";
 import { BoundedContainer } from "../displayElements/BoundedContainer";
-import { Position } from "../utils/Vector";
+import { Position3D } from "../utils/Vector";
+import { Observable } from "../utils/Observable";
 
 export class DynamicObject<TSettings extends DynamicObjectSettings = DynamicObjectSettings> extends BoundedContainer<TSettings>
 {
-    public speed: Position = { x: 0, y: 0 }
+    public speed: Position3D = { x: 0, y: 0, z: 0 }
     public get physicsProps(): PhysicsProperties
     { return {
         weight: this.settings.weight ?? 1,
         friction: this.settings.friction ?? 1,
         restitution: this.settings.restitution ?? 0.5
     }}
-    protected _isDragging: boolean = false
+    protected _isDragging: Observable<boolean> = new Observable(false)
     protected _object!: PIXI.ViewContainer
     constructor(public settings:TSettings)
     {
@@ -30,7 +31,7 @@ export class DynamicObject<TSettings extends DynamicObjectSettings = DynamicObje
         this._object.cursor = "pointer"
         this.parent.on("pointermove", (e) =>
         {
-            if (!this._isDragging || !this.parent) { return; }
+            if (!this._isDragging.value || !this.parent) { return; }
             this.position = this.parent.toLocal(e.global)
             this.speed.x = e.movementX
             this.speed.y = e.movementY
@@ -40,7 +41,7 @@ export class DynamicObject<TSettings extends DynamicObjectSettings = DynamicObje
 
     public update(container: BoundedContainer)
     {
-        if (this._isDragging) { return; }
+        if (this._isDragging.value) { return; }
         this.x += this.speed.x
         this.y += this.speed.y
         if (this.left <= container.left) { this.speed.x = Math.abs(this.speed.x) }
@@ -53,12 +54,12 @@ export class DynamicObject<TSettings extends DynamicObjectSettings = DynamicObje
 
     protected handleMouseUp()
     {
-        this._isDragging = false;
+        this._isDragging.value = false;
     }
 
     protected startDragging()
     {
-        this._isDragging = true;
+        this._isDragging.value = true;
     }
 
     protected drawObject()

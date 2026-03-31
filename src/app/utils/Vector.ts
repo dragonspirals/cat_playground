@@ -2,6 +2,7 @@ import { DynamicObject } from "../components/DynamicObject";
 import { BoundedContainer } from "../displayElements/BoundedContainer";
 
 export interface Position { x: number, y: number }
+export interface Position3D extends Position { z: number}
 export interface Polar { r: number, theta: number }
 
 export const Dot = (a: Position, b: Position) => a.x * b.x + a.y * b.y

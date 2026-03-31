@@ -12,6 +12,7 @@ import { Ball, BallSettings } from "../components/Ball.ts";
 import { Backpack, BackpackSettings, defaultBackpackSettings } from "../components/Backpack.ts";
 import { CollisionEngine } from "../controllers/physics/CollisionEngine.ts";
 import { ContainerSettings } from "../displayElements/ResizableContainer.ts";
+import { BallVertical, BallVerticalSettings } from "../components/BallVertical.ts";
 
 /** The screen that holds the app */
 export class Playground extends BoundedContainer<PlaygroundSettings>  
@@ -90,7 +91,7 @@ export class Playground extends BoundedContainer<PlaygroundSettings>
 
     private createBall(settings: BallSettings): Ball
     {
-        const ball = new Ball(settings)
+        const ball = new BallVertical(settings)
         this.addChild(ball)
         this.backpack.addToBackpack(ball);
         this.collisionEngine.startTracking(ball);
@@ -133,7 +134,7 @@ export interface PlaygroundSettings extends ContainerSettings
 {
     cat: CatSettings;
     floor: BackgroundSettings;
-    balls: BallSettings[];
+    balls: BallVerticalSettings[];
     backpack: BackpackSettings;
 }
 
@@ -163,7 +164,8 @@ export const DefaultPlaygroundSettings: PlaygroundSettings =
             weight: 0.2,
             radius: 15,
             color: "#ff7979",
-            friction: 0.99
+            friction: 0.99,
+            pickUpHeight: 250
         }
     ],
     floor: 

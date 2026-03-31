@@ -2,13 +2,11 @@ import * as PIXI from "pixi.js"
 import { BoundedContainer } from "../displayElements/BoundedContainer";
 import { DynamicObject, DynamicObjectSettings } from "./DynamicObject";
 import { BackpackItem } from "./BackpackItem";
-import * as VECTOR from "../utils/Vector.ts"
 
 
 export class Ball<TSettings extends BallSettings = BallSettings> extends BackpackItem<TSettings>
 {
-    public speed: VECTOR.Position = { x: 0, y: 0 }
-    private _shadowGraphics: PIXI.Graphics = new PIXI.Graphics();
+    protected _shadowGraphics: PIXI.Graphics = new PIXI.Graphics();
     constructor(public settings:TSettings)
     {
         super(settings);
@@ -17,7 +15,7 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Backpac
 
     public update(container: BoundedContainer)
     {
-        if (this._isDragging) { return; }
+        if (this._isDragging.value) { return; }
         super.update(container);
         this._object.rotation += this.speed.x / (Math.PI * this.settings.radius)
     }
@@ -50,7 +48,7 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Backpac
     {
         if (!otherObject) 
         { 
-            this.speed = { x: 0, y: 0 }
+            this.speed = { x: 0, y: 0, z:0 }
             return; 
         }
     }
