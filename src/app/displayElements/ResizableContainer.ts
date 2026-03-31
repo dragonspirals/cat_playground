@@ -4,6 +4,8 @@ import { BasicEvent } from "../utils/Event";
 export class ResizableContainer<TSettings extends ContainerSettings = ContainerSettings> extends Container
 {
     public onParentChanged: BasicEvent = new BasicEvent()
+    public get collidableHeight() { return this.bottom - this.top }
+
     public get left() { return this.x - this.width/2 - this.pivot.x }
     public get right() { return this.x + this.width/2 - this.pivot.x }
     public get top() { return this.y - this.height/2 - this.pivot.y }

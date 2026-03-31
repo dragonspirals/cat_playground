@@ -14,13 +14,8 @@ export class BoundedContainer<TSettings extends ContainerSettings = ContainerSet
 
     public isIntersecting(otherObject: BoundedContainer): boolean
     {
-        const result =  otherObject.right >= this.left && otherObject.left <= this.right
+        const result = otherObject.right >= this.left && otherObject.left <= this.right
             && otherObject.bottom >= this.top && otherObject.top <= this.bottom
         return result;
-    }
-
-    public handleCollision(otherObject?: BoundedContainer): void
-    {
-
     }
 }

@@ -1,15 +1,30 @@
 import { BackpackItem } from "../../components/BackpackItem";
+import { BallVertical } from "../../components/BallVertical";
 import { DynamicObject } from "../../components/DynamicObject";
 import { BoundedContainer } from "../../displayElements/BoundedContainer";
 import { handleDynamicCollision, handleStaticCollision } from "../../utils/Vector";
 
+export enum CollisionType { Static, Dynamic, Dynamic3D }
+
 export class CollisionEngine
 {
-    public trackedObjects: BoundedContainer[] = [];
+    private _trackedStaticObjects: BoundedContainer[] = [];
+    private _trackedDynamicObjects: DynamicObject[] = [];
+    private _trackedDynamic3DObjects: BallVertical[] = [];
+    public get trackedObjects() 
+    { 
+        return [
+            ...this._trackedDynamic3DObjects, 
+            ...this._trackedDynamicObjects, 
+            ...this._trackedStaticObjects
+        ]
+    }
 
-    public startTracking(object: BoundedContainer)
+    public startTracking(object: BoundedContainer | DynamicObject | BallVertical)
     {
-        this.trackedObjects.push(object)
+        if (object instanceof BallVertical) { this._trackedDynamic3DObjects.push(object) }
+        else if (object instanceof DynamicObject) { this._trackedDynamicObjects.push(object)}
+        else { this._trackedStaticObjects.push(object) }
     }
 
     public update()

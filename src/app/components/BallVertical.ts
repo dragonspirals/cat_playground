@@ -41,6 +41,17 @@ export class BallVertical<TSettings extends BallVerticalSettings = BallVerticalS
         this._object.rotation += this.speed.x / (Math.PI * this.settings.radius)
     }
 
+    public isIntersecting(otherObject: BallVertical): boolean
+    public isIntersecting(otherObject: BoundedContainer): boolean
+    public isIntersecting(otherObject: BoundedContainer | BallVertical): boolean
+    {
+        const otherZPos = otherObject instanceof BallVertical ? otherObject.zPos : 0;
+        if (otherZPos - this.zPos > (this.collidableHeight + otherObject.height)/2) { return false; }
+        const result = otherObject.right >= this.left && otherObject.left <= this.right
+            && otherObject.bottom >= this.top && otherObject.top <= this.bottom
+        return result;
+    }
+
     private getNewZSpeed(): number
     {
         if (this._zPos > this.gravity){ return this.speed.z + this.gravity }
