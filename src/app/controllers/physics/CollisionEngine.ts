@@ -17,7 +17,6 @@ export class CollisionEngine
         for (let i=0; i<this.trackedObjects.length-1; i++)
         {
             for (let j=i+1; j<this.trackedObjects.length; j++)
-
             {
                 if (this.trackedObjects[i].isIntersecting(this.trackedObjects[j]))
                 {

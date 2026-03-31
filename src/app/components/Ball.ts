@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js"
 import { BoundedContainer } from "../displayElements/BoundedContainer";
-import { DynamicObject, DynamicObjectSettings } from "./DynamicObject";
+import { DynamicObjectSettings } from "./DynamicObject";
 import { BackpackItem } from "./BackpackItem";
 
 
@@ -42,15 +42,6 @@ export class Ball<TSettings extends BallSettings = BallSettings> extends Backpac
         this._shadowGraphics.ellipse(0, this._settings.radius, this._settings.radius, 5).fill("#22213f")
         this.addChildAt(this._shadowGraphics, 0)
         this._shadowGraphics.filters = new PIXI.BlurFilter({strength: 3, quality: 3, resolution: 3, kernelSize: 5}) 
-    }
-
-    public handleCollision(otherObject?: DynamicObject): void
-    {
-        if (!otherObject) 
-        { 
-            this.speed = { x: 0, y: 0, z:0 }
-            return; 
-        }
     }
 }
 

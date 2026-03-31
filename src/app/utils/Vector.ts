@@ -34,14 +34,14 @@ export const Multiply = (v: Position, c: number) => ({x: c*v.x, y: c*v.y})
 export const Add = (a: Position, b: Position) => ({x: a.x + b.x, y: a.y + b.y})
 export const Subtract = (a: Position, b: Position) => Add(a, Multiply(b, -1))
 
-export function getObj1NewSpeed(obj1: DynamicObject, obj2: DynamicObject): Position
+export function getObj1NewSpeed(obj1: DynamicObject, obj2: DynamicObject): Position3D
 {
     const relativePosition = AtoB(obj1.position, obj2.position)
     const distance = Magnitude(relativePosition);
     const relativeVelocity = AtoB(obj1.speed, obj2.speed)
     const aa = Dot(relativeVelocity, relativePosition)/Math.pow(distance, 2);
     const nnn = Multiply(relativePosition, aa)
-    return Subtract(obj2.speed, nnn)
+    return {...Subtract(obj2.speed, nnn), z: obj2.speed.z}
 }
 
 export function handleDynamicCollision(obj1: DynamicObject, obj2: DynamicObject): void
@@ -62,5 +62,5 @@ export function handleStaticCollision(dynamicObj: DynamicObject, staticObj: Boun
     if (collisionDot > 0){ return } // dynamic object already moving away
     const vx = dynamicObj.speed.x - (1 + restitution) * collisionDot * normal.x
     const vy = dynamicObj.speed.y - (1 + restitution) * collisionDot * normal.y
-    dynamicObj.speed = {x: vx, y: vy}
+    dynamicObj.speed = {x: vx, y: vy, z: dynamicObj.speed.z}
 }

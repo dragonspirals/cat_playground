@@ -1,21 +1,23 @@
 import { Ball, BallSettings } from "./Ball";
 import { BoundedContainer } from "../displayElements/BoundedContainer";
 
-export class BallVertical<TSettings extends BallVerticalSettings> extends Ball<TSettings>
+export class BallVertical<TSettings extends BallVerticalSettings = BallVerticalSettings> extends Ball<TSettings>
 {
     public gravity = 0.98;
     public get left() { return this.position.x - this._object.width/2 - this.pivot.x }
     public get right() { return this.position.x + this._object.width/2 - this.pivot.x }
-    public get top() { return this.position.y - this._object.height/2 - this.pivot.y + this._height/2 }
+    public get top() { return this.position.y - this._object.height/2 - this.pivot.y + this._zPos/2 }
     public get bottom() { return this.position.y + this._object.height/2 - this.pivot.y }
 
-    private _height: number = 0
-    public set height(val: number)
+    protected _zPos: number = 0
+    private set zPos(val: number)
     {
-        const deltaHeight = val - this._height;
+        if (isNaN(val)){ throw new Error("invalid height set for ball")}
+        const deltaHeight = val - this._zPos;
         this._object.position.y -= deltaHeight;
-        this._height = val;
+        this._zPos = val;
     }
+    public get zPos(){ return this._zPos }
 
     constructor(_settings:TSettings)
     {
@@ -24,10 +26,10 @@ export class BallVertical<TSettings extends BallVerticalSettings> extends Ball<T
         {
             if (this._settings.pickUpHeight && this._settings.pickUpHeight > 0 && this._isDragging.value)
             {
-                this.height = this._settings.pickUpHeight
+                this.zPos = this._settings.pickUpHeight
             }
         });
-        this.isStashed.onChanged(() =>{ if (this.isStashed.value) { this.height = 0}})
+        this.isStashed.onChanged(() =>{ if (this.isStashed.value) { this.zPos = 0}})
     }
 
     public update(container: BoundedContainer)
@@ -35,13 +37,13 @@ export class BallVertical<TSettings extends BallVerticalSettings> extends Ball<T
         if (this._isDragging.value) { return; }
         super.update(container);
         this.speed.z = this.getNewZSpeed();
-        this.height = Math.max(0, this._height - this.speed.z)
+        this.zPos = Math.max(0, this._zPos - this.speed.z)
         this._object.rotation += this.speed.x / (Math.PI * this.settings.radius)
     }
 
     private getNewZSpeed(): number
     {
-        if (this._height > this.gravity){ return this.speed.z + this.gravity }
+        if (this._zPos > this.gravity){ return this.speed.z + this.gravity }
         if (Math.abs(this.speed.z) < this.gravity) { return 0; }
         return -Math.sqrt(this.physicsProps.restitution) * this.speed.z
     }
