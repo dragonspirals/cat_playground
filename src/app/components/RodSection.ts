@@ -17,7 +17,6 @@ export class RodSection
         const newEndDirection = { x: this._endPos.x + this._velocity.x - this._startPos.x, y: this._endPos.y + this._velocity.y - this._startPos.y}
         const distance = VECTOR.Magnitude(newEndDirection)
         this._endPos = VECTOR.Add(this._startPos, VECTOR.Multiply(newEndDirection, this._radius/distance))
-
     }
 
     public updateStartPos(startPos: VECTOR.Position)
@@ -29,5 +28,13 @@ export class RodSection
         const movement = VECTOR.Subtract(this._endPos, newEndPos)
         if (movement.x !== 0 || movement.y !== 0) { console.log(movement) }
         this._endPos = newEndPos
+    }
+
+    public reset(startPos: VECTOR.Position)
+    {
+        this._startPos = startPos
+        this._endPos = {x: this._startPos.x, y: this._startPos.y + this._radius}
+
+        this._velocity = {x: 0, y: 0}
     }
 }

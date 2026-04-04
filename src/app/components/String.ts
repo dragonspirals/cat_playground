@@ -18,13 +18,13 @@ export class String extends BackpackItem
     constructor(settings: DynamicObjectSettings)
     {
         super(settings)
-        for (let i=0; i< 20; i++)
+        for (let i=0; i< 100; i++)
         {
-
             const rodSection = new RodSection(10, {x: 0, y: i*10}, {x: 0, y: (i+1) * 10});
             this._rodSections.push(rodSection)
         }
         this.drawUpdate();
+        this.isStashed.onChanged((stashed) => {if (stashed) { this.handleStashed()}})
     }
 
     public update(container: BoundedContainer)
@@ -35,15 +35,36 @@ export class String extends BackpackItem
         this.drawUpdate();
     }
 
+    public isIntersecting(otherObject: BoundedContainer): boolean
+    {
+        if (!this.parent) { return false; }
+        const startPos = this.parent.toLocal(this.toGlobal(this._startPosition))
+        const result = otherObject.right >= startPos.x && otherObject.left <= startPos.x
+            && otherObject.bottom >=startPos.y && otherObject.top <= startPos.y
+        return result;
+    }
+
+    protected handleStashed()
+    {
+        this.updateStartPos({x: 0, y: 0})
+        this._rodSections.forEach((rod, index) => 
+        {
+            const startPos = index === 0 ? {x: 0, y: 0} : this._rodSections[index - 1].endPos
+            rod.reset(startPos)
+        })
+        this.drawUpdate()
+    }
+
     protected handleMouseMove(e: PIXI.FederatedMouseEvent)
     {
         if (!this._isDragging.value){ return; }
         this._startPosition = this.toLocal(e.global)
     }
 
-    protected updateStartPos()
+    protected updateStartPos(startPos?: VECTOR.Position)
     {
         if (!this.parent) { return; }
+        this._startPosition  = startPos ?? this._startPosition;
         this._rodSections[0].updateStartPos(this._startPosition)
         for (let i=1; i<this._rodSections.length; i++)
         {
