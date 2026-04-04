@@ -6,8 +6,6 @@ import type {
     ResizePluginOptions,
 } from "pixi.js";
 
-import { resize } from "./resize";
-
 // Custom utility type:
 export type DeepRequired<T> = Required<{
   [K in keyof T]: DeepRequired<T[K]>;

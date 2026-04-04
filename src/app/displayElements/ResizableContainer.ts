@@ -5,6 +5,7 @@ export class ResizableContainer<TSettings extends ContainerSettings = ContainerS
 {
     public onParentChanged: BasicEvent = new BasicEvent()
     public get collidableHeight() { return this.bottom - this.top }
+    public get collidableWidth() { return this.right - this.left }
 
     public get left() { return this.x - this.width/2 - this.pivot.x }
     public get right() { return this.x + this.width/2 - this.pivot.x }

@@ -36,7 +36,7 @@ export class Playground extends BoundedContainer<PlaygroundSettings>
 
         this.createCat(true)
 
-        // this.createIdleCats(5)
+        this.createIdleCats(5)
 
         this.backpack = new Backpack(this._settings.backpack);
         this.addChild(this.backpack)
