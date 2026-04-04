@@ -4,15 +4,21 @@ import * as PIXI from 'pixi.js'
 
 export class CatWand<TSettings extends CatWandSettings = CatWandSettings> extends ToyString<TSettings>
 {
-    private _rodTip: Position = {x: 50, y: -50}
-    private _rodBase: Position = {x: -50, y: 50}
+    private _rodTip: Position = {x: 100, y: -100}
+    private _rodBase: Position = {x: -40, y: 70}
+    constructor(settings: TSettings)
+    {
+        super(settings);
+        this._rodTip = settings.rod.tip;
+        this._rodBase = settings.rod.base
+    }
 
     protected drawUpdate()
     {
         this.graphics.clear();
         this.graphics.moveTo(this._startPosition.x + this._rodBase.x, this._startPosition.y + this._rodBase.y)
             .lineTo(this._startPosition.x + this._rodTip.x, this._startPosition.y + this._rodTip.y)
-            .stroke(this.settings.rod)
+            .stroke(this.settings.rod.stroke)
             .lineTo(this._rodSections[0].endPos.x + this._rodTip.x, this._rodSections[0].endPos.y + this._rodTip.y)
 
         for (let i=1; i<this._rodSections.length; i++)
@@ -20,11 +26,19 @@ export class CatWand<TSettings extends CatWandSettings = CatWandSettings> extend
             this.graphics.lineTo(this._rodSections[i].endPos.x + this._rodTip.x, this._rodSections[i].endPos.y + this._rodTip.y)
                 .stroke(this.settings.stroke)
         }
+        const lastSect = this._rodSections[this._rodSections.length -1]
+        this.graphics.circle(lastSect.endPos.x + this._rodTip.x, lastSect.endPos.y + this._rodTip.y, 10).fill({ color: "#999999"})
     }
 
 }
 
 export interface CatWandSettings extends StringSettings
 {
-    rod: PIXI.StrokeInput
+    rod: 
+    {
+        stroke: PIXI.StrokeInput;
+        tip: Position;
+        base: Position;
+    }
+    
 }

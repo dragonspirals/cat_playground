@@ -1,8 +1,7 @@
 import { BoundedContainer } from "../../displayElements/BoundedContainer";
-import { BackpackItem } from "../backpack/BackpackItem";
+import { BackpackItem, BackpackItemSettings } from "../backpack/BackpackItem";
 import * as PIXI from "pixi.js"
 import { RodSection } from "../physicsObjects/RodSection";
-import { DynamicObjectSettings } from "../physicsObjects/DynamicObject";
 import * as VECTOR from "../../utils/Vector"
 
 /** String like the kind you can tie - NOT string like the type (I couldn't think of a better way to name this)*/
@@ -24,8 +23,6 @@ export class ToyString<TSettings extends StringSettings = StringSettings> extend
             const rodSection = new RodSection(r, {x: 0, y: i*r}, {x: 0, y: (i+1) * r});
             this._rodSections.push(rodSection)
         }
-        // this.drawUpdate();
-        this.isStashed.onChanged((stashed) => {if (stashed) { this.handleStashed()}})
     }
 
     public update(container: BoundedContainer)
@@ -45,8 +42,10 @@ export class ToyString<TSettings extends StringSettings = StringSettings> extend
         return result;
     }
 
-    protected handleStashed()
+    protected handleStashed(stashed?: boolean)
     {
+        super.handleStashed(stashed);
+        if (!stashed) { return; }
         this.updateStartPos({x: 0, y: 0})
         this._rodSections.forEach((rod, index) => 
         {
@@ -94,7 +93,7 @@ export class ToyString<TSettings extends StringSettings = StringSettings> extend
     }
 }
 
-export interface StringSettings extends DynamicObjectSettings
+export interface StringSettings extends BackpackItemSettings
 {
     /** how many subdivisions of the string are there */
     sectionCount: number;

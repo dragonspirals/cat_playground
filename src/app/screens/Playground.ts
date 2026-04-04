@@ -169,7 +169,13 @@ export const DefaultPlaygroundSettings: PlaygroundSettings =
         sectionCount: 20,  
         sectionLength: 10, 
         stroke:{ color: "#6b1000", width: 5 }, 
-        rod: { color: "#291d19", width: 10 }
+        rod: 
+        { 
+            stroke: {color: "#291d19", width: 10 },
+            tip:  {x: 100, y: -100},
+            base: {x: -40, y: 70}
+        },
+        stashedScale: 0.5
     },
     balls:
     [
