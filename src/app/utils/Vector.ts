@@ -31,8 +31,8 @@ export const  AngleOf = (p: Position): number => Math.atan(p.y/p.x)
 export const AtoB = (a: Position, b: Position) => ({x: b.x - a.x, y: b.y - a.y})
 
 export const Multiply = (v: Position, c: number) => ({x: c*v.x, y: c*v.y})
-export const Add = (a: Position, b: Position) => ({x: a.x + b.x, y: a.y + b.y})
-export const Subtract = (a: Position, b: Position) => Add(a, Multiply(b, -1))
+export const Add = (...positions: Position[]) => positions.reduce((acc: Position, cur: Position) => ({x: acc.x + cur.x, y: acc.y + cur.y}), {x: 0, y: 0}) 
+export const Subtract = (a: Position, ...b: Position[]) => Add(a, ...b.map((pos) => Multiply(pos, -1)))
 
 export function getObj1NewSpeed(obj1: DynamicObject, obj2: DynamicObject): Position3D
 {
