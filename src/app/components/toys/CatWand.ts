@@ -4,13 +4,15 @@ import * as PIXI from 'pixi.js'
 
 export class CatWand<TSettings extends CatWandSettings = CatWandSettings> extends ToyString<TSettings>
 {
-    private _rodTip: Position = {x: 100, y: -100}
-    private _rodBase: Position = {x: -40, y: 70}
+    private _rodTip: Position;
+    private _rodBase: Position;
+    private _mouse: PIXI.Graphics = new PIXI.Graphics();
     constructor(settings: TSettings)
     {
         super(settings);
         this._rodTip = settings.rod.tip;
-        this._rodBase = settings.rod.base
+        this._rodBase = settings.rod.base;
+        this.addChild(this._mouse)
     }
 
     protected drawUpdate()
@@ -27,7 +29,11 @@ export class CatWand<TSettings extends CatWandSettings = CatWandSettings> extend
                 .stroke(this.settings.stroke)
         }
         const lastSect = this._rodSections[this._rodSections.length -1]
-        this.graphics.circle(lastSect.endPos.x + this._rodTip.x, lastSect.endPos.y + this._rodTip.y, 10).fill({ color: "#999999"})
+        this._mouse.position.set(lastSect.endPos.x + this._rodTip.x, lastSect.endPos.y + this._rodTip.y)
+        this._mouse.clear()
+            .rotateTransform(-lastSect.theta)
+            .ellipse(0,0, 10, 20)
+            .fill({ color: "#999999"})
     }
 
 }

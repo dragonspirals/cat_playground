@@ -166,13 +166,13 @@ export const DefaultPlaygroundSettings: PlaygroundSettings =
     backpack: defaultBackpackSettings,
     catWand:
     {
-        sectionCount: 20,  
+        sectionCount: 15,  
         sectionLength: 10, 
-        stroke:{ color: "#6b1000", width: 5 }, 
+        stroke:{ color: "#6b1000", width: 5, cap: 'round' }, 
         rod: 
         { 
-            stroke: {color: "#291d19", width: 10 },
-            tip:  {x: 100, y: -100},
+            stroke: {color: "#291d19", width: 10, cap: 'round' },
+            tip:  {x: 60, y: -60},
             base: {x: -40, y: 70}
         },
         stashedScale: 0.5

@@ -4,6 +4,12 @@ export class RodSection
 {
     public get startPos() : VECTOR.Position { return this._startPos }
     public get endPos() { return this._endPos }
+        
+    public get theta() 
+    { 
+        const direction = VECTOR.Subtract(this._endPos, this._startPos);
+        return Math.atan(direction.x/Math.abs(direction.y))
+    }
     private _velocity: VECTOR.Position = {x: 0, y: 0}
     private gravity:number = 0.02
 
@@ -11,8 +17,7 @@ export class RodSection
 
     public update()
     {
-        const direction = VECTOR.Subtract(this._endPos, this.startPos)
-        const theta = Math.atan(direction.x/Math.abs(direction.y))
+        const theta = this.theta
         this._velocity = {x: this._velocity.x + this.gravity * Math.cos(theta) * Math.sin(theta), y: this._velocity.y + this.gravity * Math.pow(Math.cos(theta), 2)}
         const newEndDirection = { x: this._endPos.x + this._velocity.x - this._startPos.x, y: this._endPos.y + this._velocity.y - this._startPos.y}
         const distance = VECTOR.Magnitude(newEndDirection)
