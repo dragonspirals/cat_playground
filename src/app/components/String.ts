@@ -8,7 +8,7 @@ import * as VECTOR from "../utils/Vector"
 /** String like the kind you can tie - NOT string like the type (I couldn't think of a better way to name this)*/
 export class String extends BackpackItem
 {
-    private _mousePosition: VECTOR.Position = { x: 0, y: 0}
+    private _startPosition: VECTOR.Position = { x: 0, y: 0}
     private _rodSections: RodSection[] = []
     private get graphics()
     {
@@ -37,13 +37,14 @@ export class String extends BackpackItem
 
     protected handleMouseMove(e: PIXI.FederatedMouseEvent)
     {
-        this._mousePosition = this.toLocal(e.global)
+        if (!this._isDragging.value){ return; }
+        this._startPosition = this.toLocal(e.global)
     }
 
     protected updateStartPos()
     {
-        if (!this._isDragging.value || !this.parent) { return; }
-        this._rodSections[0].updateStartPos(this._mousePosition)
+        if (!this.parent) { return; }
+        this._rodSections[0].updateStartPos(this._startPosition)
         for (let i=1; i<this._rodSections.length; i++)
         {
             this._rodSections[i].updateStartPos(this._rodSections[i-1].endPos)
