@@ -1,6 +1,6 @@
-import { BackpackItem } from "../../components/BackpackItem";
-import { BallVertical } from "../../components/BallVertical";
-import { DynamicObject } from "../../components/DynamicObject";
+import { BackpackItem } from "../../components/backpack/BackpackItem";
+import { BallVertical } from "../../components/toys/BallVertical";
+import { DynamicObject } from "../../components/physicsObjects/DynamicObject";
 import { BoundedContainer } from "../../displayElements/BoundedContainer";
 import { handleDynamicCollision, handleStaticCollision } from "../../utils/Vector";
 

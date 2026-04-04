@@ -1,6 +1,6 @@
-import { Observable } from "../utils/Observable";
+import { Observable } from "../../utils/Observable";
 import { Backpack } from "./Backpack";
-import { DynamicObject, DynamicObjectSettings } from "./DynamicObject";
+import { DynamicObject, DynamicObjectSettings } from "../physicsObjects/DynamicObject";
 
 export class BackpackItem<TSettings extends DynamicObjectSettings = DynamicObjectSettings> extends DynamicObject<TSettings>
 {

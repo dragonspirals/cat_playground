@@ -1,6 +1,6 @@
 import { ColorSource, Graphics, Size, Sprite, Texture } from "pixi.js";
-import { ContainerSettings } from "../displayElements/ResizableContainer";
-import { BoundedContainer } from "../displayElements/BoundedContainer";
+import { ContainerSettings } from "../../displayElements/ResizableContainer";
+import { BoundedContainer } from "../../displayElements/BoundedContainer";
 import { BackpackItem } from "./BackpackItem";
 
 export class Backpack extends BoundedContainer<BackpackSettings>

@@ -1,4 +1,4 @@
-import { DynamicObject } from "../components/DynamicObject";
+import { DynamicObject } from "../components/physicsObjects/DynamicObject";
 import { BoundedContainer } from "../displayElements/BoundedContainer";
 
 export interface Position { x: number, y: number }

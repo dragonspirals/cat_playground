@@ -1,4 +1,4 @@
-import * as VECTOR from "../utils/Vector";
+import * as VECTOR from "../../utils/Vector";
 
 export class RodSection
 {

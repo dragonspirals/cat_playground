@@ -8,13 +8,13 @@ import { BoundedContainer } from "../displayElements/BoundedContainer.ts";
 import { CatKeyboardController } from "../controllers/catControllers/CatController.ts";
 import { IdleController } from "../controllers/catControllers/IdleController.ts";
 import { randomArrayElement } from "../utils/TypeUtils.ts";
-import { Ball, BallSettings } from "../components/Ball.ts";
-import { Backpack, BackpackSettings, defaultBackpackSettings } from "../components/Backpack.ts";
+import { Ball, BallSettings } from "../components/toys/Ball.ts";
+import { Backpack, BackpackSettings, defaultBackpackSettings } from "../components/backpack/Backpack.ts";
 import { CollisionEngine } from "../controllers/physics/CollisionEngine.ts";
 import { ContainerSettings } from "../displayElements/ResizableContainer.ts";
-import { BallVertical, BallVerticalSettings } from "../components/BallVertical.ts";
-import { String } from "../components/String.ts";
-import { BackpackItem } from "../components/BackpackItem.ts";
+import { BallVertical, BallVerticalSettings } from "../components/toys/BallVertical.ts";
+import { String } from "../components/toys/String.ts";
+import { BackpackItem } from "../components/backpack/BackpackItem.ts";
 
 /** The screen that holds the app */
 export class Playground extends BoundedContainer<PlaygroundSettings>  
@@ -104,7 +104,7 @@ export class Playground extends BoundedContainer<PlaygroundSettings>
 
     private createString(): String
     {
-        const ball = new String({})
+        const ball = new String({sectionCount: 20,  sectionLength: 10, stroke:{ color: "#6b1000", width: 5 }})
         this.addChild(ball)
         this.backpack.addToBackpack(ball);
         this.collisionEngine.startTracking(ball);

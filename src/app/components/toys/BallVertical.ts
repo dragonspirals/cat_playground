@@ -1,5 +1,5 @@
 import { Ball, BallSettings } from "./Ball";
-import { BoundedContainer } from "../displayElements/BoundedContainer";
+import { BoundedContainer } from "../../displayElements/BoundedContainer";
 
 export class BallVertical<TSettings extends BallVerticalSettings = BallVerticalSettings> extends Ball<TSettings>
 {

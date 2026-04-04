@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js"
-import { BoundedContainer } from "../displayElements/BoundedContainer";
-import { DynamicObjectSettings } from "./DynamicObject";
-import { BackpackItem } from "./BackpackItem";
+import { BoundedContainer } from "../../displayElements/BoundedContainer";
+import { DynamicObjectSettings } from "../physicsObjects/DynamicObject";
+import { BackpackItem } from "../backpack/BackpackItem";
 
 
 export class Ball<TSettings extends BallSettings = BallSettings> extends BackpackItem<TSettings>

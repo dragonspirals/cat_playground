@@ -1,12 +1,12 @@
-import { BoundedContainer } from "../displayElements/BoundedContainer";
-import { BackpackItem } from "./BackpackItem";
+import { BoundedContainer } from "../../displayElements/BoundedContainer";
+import { BackpackItem } from "../backpack/BackpackItem";
 import * as PIXI from "pixi.js"
-import { RodSection } from "./RodSection";
-import { DynamicObjectSettings } from "./DynamicObject";
-import * as VECTOR from "../utils/Vector"
+import { RodSection } from "../physicsObjects/RodSection";
+import { DynamicObjectSettings } from "../physicsObjects/DynamicObject";
+import * as VECTOR from "../../utils/Vector"
 
 /** String like the kind you can tie - NOT string like the type (I couldn't think of a better way to name this)*/
-export class String extends BackpackItem
+export class String<TSettings extends StringSettings = StringSettings> extends BackpackItem<StringSettings>
 {
     private _startPosition: VECTOR.Position = { x: 0, y: 0}
     private _rodSections: RodSection[] = []
@@ -15,12 +15,13 @@ export class String extends BackpackItem
         return this._object as PIXI.Graphics
     }
 
-    constructor(settings: DynamicObjectSettings)
+    constructor(settings: TSettings)
     {
         super(settings)
-        for (let i=0; i< 100; i++)
+        const r = settings.sectionLength
+        for (let i=0; i< settings.sectionCount; i++)
         {
-            const rodSection = new RodSection(10, {x: 0, y: i*10}, {x: 0, y: (i+1) * 10});
+            const rodSection = new RodSection(r, {x: 0, y: i*r}, {x: 0, y: (i+1) * r});
             this._rodSections.push(rodSection)
         }
         this.drawUpdate();
@@ -82,7 +83,7 @@ export class String extends BackpackItem
         for (let i=1; i<this._rodSections.length; i++)
         {
             this.graphics.lineTo(this._rodSections[i].endPos.x, this._rodSections[i].endPos.y)
-                .stroke({ color: "#6b1000", width: 5 })
+                .stroke(this.settings.stroke)
         }
     }
 
@@ -92,4 +93,13 @@ export class String extends BackpackItem
         this.addChild(object)
         this._object = object       
     }
+}
+
+export interface StringSettings extends DynamicObjectSettings
+{
+    /** how many subdivisions of the string are there */
+    sectionCount: number;
+    /** hos long is each subdivision */
+    sectionLength: number;
+    stroke: PIXI.StrokeInput
 }

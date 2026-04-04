@@ -1,8 +1,8 @@
 import * as PIXI from "pixi.js"
-import { ContainerSettings } from "../displayElements/ResizableContainer";
-import { BoundedContainer } from "../displayElements/BoundedContainer";
-import { Position3D } from "../utils/Vector";
-import { Observable } from "../utils/Observable";
+import { ContainerSettings } from "../../displayElements/ResizableContainer";
+import { BoundedContainer } from "../../displayElements/BoundedContainer";
+import { Position3D } from "../../utils/Vector";
+import { Observable } from "../../utils/Observable";
 
 export class DynamicObject<TSettings extends DynamicObjectSettings = DynamicObjectSettings> extends BoundedContainer<TSettings>
 {
