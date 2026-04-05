@@ -6,12 +6,13 @@ export class CatWand<TSettings extends CatWandSettings = CatWandSettings> extend
 {
     private _rodTip: Position;
     private _rodBase: Position;
-    private _mouse: PIXI.Graphics = new PIXI.Graphics();
+    private _mouse: PIXI.Sprite;
     constructor(settings: TSettings)
     {
         super(settings);
         this._rodTip = settings.rod.tip;
         this._rodBase = settings.rod.base;
+        this._mouse = new PIXI.Sprite({texture: PIXI.Texture.from(settings.endItem.asset), scale: settings.endItem.scale ?? 1})
         this.addChild(this._mouse)
     }
 
@@ -29,11 +30,12 @@ export class CatWand<TSettings extends CatWandSettings = CatWandSettings> extend
                 .stroke(this.settings.stroke)
         }
         const lastSect = this._rodSections[this._rodSections.length -1]
-        this._mouse.position.set(lastSect.endPos.x + this._rodTip.x, lastSect.endPos.y + this._rodTip.y)
-        this._mouse.clear()
-            .rotateTransform(-lastSect.theta)
-            .ellipse(0,0, 10, 20)
-            .fill({ color: "#999999"})
+        this._mouse.position.set(lastSect.endPos.x + this._rodTip.x - this._mouse.width/2, lastSect.endPos.y + this._rodTip.y)
+        this._mouse.rotation = -lastSect.theta;
+        // this._mouse.clear()
+        //     .rotateTransform(-lastSect.theta)
+        //     .ellipse(0,0, 10, 20)
+        //     .fill({ color: "#999999"})
     }
 
 }
@@ -45,6 +47,11 @@ export interface CatWandSettings extends StringSettings
         stroke: PIXI.StrokeInput;
         tip: Position;
         base: Position;
+    }
+    endItem:
+    {
+        asset: string;
+        scale?: number;
     }
     
 }

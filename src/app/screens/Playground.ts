@@ -175,6 +175,11 @@ export const DefaultPlaygroundSettings: PlaygroundSettings =
             tip:  {x: 60, y: -60},
             base: {x: -40, y: 70}
         },
+        endItem: 
+        {
+            asset: "mouse.png",
+            scale: 0.2
+        },
         stashedScale: 0.5
     },
     balls:
