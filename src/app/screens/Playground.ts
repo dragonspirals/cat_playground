@@ -191,6 +191,17 @@ export const DefaultPlaygroundSettings: PlaygroundSettings =
             weight: 0.2,
             radius: 15,
             color: "#ff7979",
+            asset: "tennis-ball.png",
+            friction: 0.99,
+            restitution: 0.75,
+            pickUpHeight: 250
+        },
+        {
+            weight: 0.2,
+            restitution: 0.6,
+            radius: 40,
+            color: "#ff7979",
+            asset: "basket-ball.png",
             friction: 0.99,
             pickUpHeight: 250
         }
