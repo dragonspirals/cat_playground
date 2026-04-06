@@ -57,16 +57,17 @@ export class Backpack extends BoundedContainer<BackpackSettings>
 
     private moveStashedItems()
     {
-        let startingPosition = this.position.x + this._backpackImage.width + 50;
+        let startingPosition = this.position.x + this._backpackImage.width;
         
         this._items.forEach((item) => 
         {  
             item.zIndex = item.isStashed.value ? this.zIndex + 1 : 0;
 
             if (!item.parent || !item.isStashed.value){ return; }
+            startingPosition += item.width/2;
             item.position.set(startingPosition, this.position.y - 60 );
             item.speed = { x: 0, y: 0, z: 0 }
-            startingPosition += item.width;
+            startingPosition += item.width/2 + this._settings.itemSpacing
         })
     }
 
@@ -91,11 +92,13 @@ export interface BackpackSettings extends ContainerSettings
         color?: ColorSource;
         size: Size;
         radius?: number
-    }
+    },
+    itemSpacing: number
 }
 
 export const defaultBackpackSettings: BackpackSettings =
 {
+    itemSpacing: 10,
     backpackAsset: "backpack.png",
     anchor: { x: 0, y: 1 },
     background:
