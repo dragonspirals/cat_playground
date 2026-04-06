@@ -177,7 +177,7 @@ export const DefaultPlaygroundSettings: PlaygroundSettings =
                 tip:  {x: 60, y: -60},
                 base: {x: -40, y: 70}
             },
-            sectionGravity: 1 ,
+            sectionGravity: 6 ,
             endItem: 
             {
                 asset: "mouse.png",
@@ -186,9 +186,9 @@ export const DefaultPlaygroundSettings: PlaygroundSettings =
             stashedScale: 0.5
         },
         {
-            sectionCount: 20,  
+            sectionCount: 15,  
             sectionLength: 10, 
-            sectionGravity:  1,
+            sectionGravity:  2,
             stroke:{ color: "#0e021e", width: 3, cap: 'round' }, 
             rod: 
             { 

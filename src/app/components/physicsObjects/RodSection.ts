@@ -5,37 +5,45 @@ export class RodSection
     public get startPos() : VECTOR.Position { return this._startPos }
     public get endPos() { return this._endPos }
         
+    private _theta: number = 0;
+    private _rotationalVelocity: number = 0;
     public get theta() 
     { 
         const direction = VECTOR.Subtract(this._endPos, this._startPos);
-        return Math.atan(direction.x/Math.abs(direction.y))
+        if (direction.y === 0) { return Math.PI/2}
+        const angle = Math.atan(direction.x/direction.y)
+        if (direction.y < 0)
+        {
+            return Math.PI + angle
+        }
+        return angle
     }
-    private _velocity: VECTOR.Position = {x: 0, y: 0}
-
     constructor(private _radius: number, private _startPos: VECTOR.Position, private _endPos: VECTOR.Position, public gravity: number = 0.02) { }
 
     public update()
     {
-        const theta = this.theta
-        this._velocity = {x: this._velocity.x + this.gravity * Math.cos(theta) * Math.sin(theta), y: this._velocity.y + this.gravity * Math.pow(Math.cos(theta), 2)}
-        const newEndDirection = { x: this._endPos.x + this._velocity.x - this._startPos.x, y: this._endPos.y + this._velocity.y - this._startPos.y}
-        const distance = VECTOR.Magnitude(newEndDirection)
-        this._endPos = VECTOR.Add(this._startPos, VECTOR.Multiply(newEndDirection, this._radius/distance))
+        const acceleration = Math.sin(this._theta) * this.gravity/this._radius
+        this._rotationalVelocity -= acceleration;
+        this._theta -=acceleration 
+        const x = this._radius * Math.sin(this._theta) + this._startPos.x
+        const y = this._radius * Math.cos(this._theta) + this._startPos.y
+        this._endPos = {x, y}
     }
 
     public updateStartPos(startPos: VECTOR.Position)
     {
+        if (this._startPos === startPos || (startPos.x === this._endPos.x && startPos.y === this._endPos.y)) { return; }
         const direction = VECTOR.Subtract(this._endPos, startPos)
         const distance = VECTOR.Magnitude(direction)
         this._startPos = startPos;
         this._endPos = { x: direction.x * this._radius/distance + startPos.x, y: direction.y * this._radius/distance + startPos.y}
+        this._theta = this.theta
     }
 
     public reset(startPos: VECTOR.Position)
     {
         this._startPos = startPos
         this._endPos = {x: this._startPos.x, y: this._startPos.y + this._radius}
-
-        this._velocity = {x: 0, y: 0}
+        this._rotationalVelocity = 0
     }
 }
