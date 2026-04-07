@@ -109,7 +109,11 @@ export class MainScreen extends Container  {
         const floorFraction = 0.65
         this.wall.resize(width, height * (1 - floorFraction))
         this.wall.position.set(width/2, 0)
-        this.logo.position.set(width/2 - this.logo.width, height/2 - this.logo.height + 10);
+        const maxLogoSize = Math.min(400, width/4);
+        const newLogoScale = maxLogoSize/this.logo.width
+        this.logo.scale = this.logo.scale.x * newLogoScale;
+        this._onScreenInput.scale = this._onScreenInput.scale.x * newLogoScale
+        this.logo.position.set(width/2 - this.logo.width - 10, height/2 - this.logo.height + 10);
         this.pauseButton.position.set(30, 30);
         this.settingsButton.position.set(width - 30, 30);
         this._playground.resize(width, height)
