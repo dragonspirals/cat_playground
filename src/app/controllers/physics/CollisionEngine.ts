@@ -3,6 +3,8 @@ import { BallVertical } from "../../components/toys/BallVertical";
 import { DynamicObject } from "../../components/physicsObjects/DynamicObject";
 import { BoundedContainer } from "../../displayElements/BoundedContainer";
 import { handleDynamicCollision, handleStaticCollision } from "../../utils/Vector";
+import { Cat } from "../../components/Cat";
+import { CatBed } from "../../components/furniture/CatBed";
 
 export enum CollisionType { Static, Dynamic, Dynamic3D }
 
@@ -43,6 +45,15 @@ export class CollisionEngine
 
     public handleCollision(a: BoundedContainer, b: BoundedContainer)
     {
+        if ( (a instanceof Cat || b instanceof Cat) && (a instanceof CatBed || b instanceof CatBed) )
+        {
+            const catBed: CatBed = a instanceof CatBed ? a : b as CatBed
+            const cat = a instanceof Cat ? a : b as Cat
+            if (!catBed.cat)
+            {
+                catBed.addCat(cat)
+            }
+        }
         const isStashedBackpackItem = (el: BoundedContainer) => el instanceof BackpackItem && (el as BackpackItem).isStashed.value;
         if (isStashedBackpackItem(a) || isStashedBackpackItem(b)){ return; }
         const isADynamic = a instanceof DynamicObject;

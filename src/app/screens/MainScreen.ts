@@ -9,6 +9,7 @@ import { PausePopup } from "../popups/PausePopup.ts";
 import { SettingsPopup } from "../popups/SettingsPopup.ts";
 import { Background, BackgroundSettings } from "../displayElements/Background.ts";
 import { DefaultPlaygroundSettings, Playground, PlaygroundSettings } from "./Playground.ts";
+import { Backpack } from "../components/backpack/Backpack.ts";
 
 /** The screen that holds the app */
 export class MainScreen extends Container  {

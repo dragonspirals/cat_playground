@@ -3,7 +3,7 @@ import * as PIXI from "pixi.js"
 import { BoundedContainer } from "../displayElements/BoundedContainer";
 import { ICatController } from "../controllers/catControllers/CatController";
 
-export enum CatState { Walking, Standing, Sitting, Sleeping }
+export enum CatState { Walking, Standing, Sitting, Sleeping, InBed }
 
 export class Cat extends BoundedContainer<CatSettings> {
     public speed!: number;
@@ -35,8 +35,15 @@ export class Cat extends BoundedContainer<CatSettings> {
         this.drawShadow();
     }
 
-    public update(parent: BoundedContainer): void {
+    public update(parent: BoundedContainer): void 
+    {
+        if (this._catState === CatState.InBed) { return; }
         this.move(parent);
+    }
+
+    public enterCatBed()
+    {
+        this.setCatState(CatState.InBed);
     }
     
     private setCatState(newState: CatState)
@@ -46,7 +53,7 @@ export class Cat extends BoundedContainer<CatSettings> {
         this._nextStatePromise?.resolve(false);
         this._sittingSprite.visible = newState === CatState.Sitting;
         this._walkingSprite.visible = newState === CatState.Walking || newState === CatState.Standing;
-        this._sleepingSprite.visible = newState === CatState.Sleeping;
+        this._sleepingSprite.visible = newState === CatState.Sleeping || newState === CatState.InBed
         if (newState === CatState.Walking)
         {
             this._walkingSprite.play()

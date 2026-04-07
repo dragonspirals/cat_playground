@@ -15,6 +15,7 @@ import { ContainerSettings } from "../displayElements/ResizableContainer.ts";
 import { BallVertical, BallVerticalSettings } from "../components/toys/BallVertical.ts";
 import { CatWand, CatWandSettings } from "../components/toys/CatWand.ts";
 import { BackpackItem } from "../components/backpack/BackpackItem.ts";
+import { CatBed } from "../components/furniture/CatBed.ts";
 
 /** The screen that holds the app */
 export class Playground extends BoundedContainer<PlaygroundSettings>  
@@ -44,6 +45,10 @@ export class Playground extends BoundedContainer<PlaygroundSettings>
         this.addChild(this.backpack)
         this._settings.balls.forEach((ball) => this.createBall(ball));
         this._settings.catWands.forEach((wand) => this.createWand(wand));
+        const catBed: CatBed = new CatBed({scale: 0.4, frontAsset: "cat-bed-front.png", backAsset: "cat-bed-back.png"})
+        this.addChild(catBed)
+        catBed.position.set(this.left, this.top)
+        this.collisionEngine.startTracking(catBed)
     }
 
     /** Prepare the screen just before showing */
