@@ -67,6 +67,7 @@ export interface OnScreenInputSettings extends ContainerSettings
 
 export const defaultOnScreenInput: OnScreenInputSettings = 
 {
+    zIndex: 4,
     buttons:
     {
         base:

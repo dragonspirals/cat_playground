@@ -9,8 +9,7 @@ import { PausePopup } from "../popups/PausePopup.ts";
 import { SettingsPopup } from "../popups/SettingsPopup.ts";
 import { Background, BackgroundSettings } from "../displayElements/Background.ts";
 import { DefaultPlaygroundSettings, Playground, PlaygroundSettings } from "./Playground.ts";
-import { Backpack } from "../components/backpack/Backpack.ts";
-import { ArrowButton } from "../controllers/input/ArrowButton.ts";
+import { defaultOnScreenInput, OnScreenInput } from "../controllers/input/OnScreenInput.ts";
 
 /** The screen that holds the app */
 export class MainScreen extends Container  {
@@ -24,10 +23,13 @@ export class MainScreen extends Container  {
     private settingsButton: FancyButton;
     private _settings: MainScreenSettings = DefaultMainScreenSettings;
     private paused = false;
+    private _onScreenInput: OnScreenInput;
     constructor() {
         super();
 
-        this._playground = new Playground(this._settings.playground);
+        this._onScreenInput = new OnScreenInput(defaultOnScreenInput)
+        this.addChild(this._onScreenInput)
+        this._playground = new Playground(this._settings.playground, this._onScreenInput);
         this.addChild(this._playground);
         this.wall = new Background(this._settings.wall)
         this.addChild(this.wall)
@@ -111,6 +113,7 @@ export class MainScreen extends Container  {
         this.pauseButton.position.set(30, 30);
         this.settingsButton.position.set(width - 30, 30);
         this._playground.resize(width, height)
+        this._onScreenInput.position.set(width - this._onScreenInput.width/2 - 20, height/2)
     }
 
     /** Show screen with animations */
