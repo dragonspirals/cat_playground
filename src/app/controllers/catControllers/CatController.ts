@@ -1,5 +1,6 @@
 import { CatState } from "../../components/Cat";
 import { KeyboardInput } from "../input/KeyboardInput";
+import { defaultOnScreenInput, OnScreenInput } from "../input/OnScreenInput";
 
 export abstract class ICatController
 {
@@ -25,7 +26,7 @@ export class CatKeyboardController implements ICatController
     public get onKeyPressed() { return this._keyboardInput.onTrackedKeyPressed }
     private _keyboardInput: KeyboardInput
 
-    constructor()
+    constructor(private _onScreenInput: OnScreenInput)
     {
         this._keyboardInput = this.registerKeyboardInput()
     }

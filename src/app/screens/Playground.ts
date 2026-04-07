@@ -16,6 +16,7 @@ import { BallVertical, BallVerticalSettings } from "../components/toys/BallVerti
 import { CatWand, CatWandSettings } from "../components/toys/CatWand.ts";
 import { BackpackItem } from "../components/backpack/BackpackItem.ts";
 import { CatBed } from "../components/furniture/CatBed.ts";
+import { defaultOnScreenInput, OnScreenInput } from "../controllers/input/OnScreenInput.ts";
 
 /** The screen that holds the app */
 export class Playground extends BoundedContainer<PlaygroundSettings>  
@@ -139,13 +140,23 @@ export class Playground extends BoundedContainer<PlaygroundSettings>
 
     private createCat(isUserControlled: boolean = false, color: string = "babyLeo")
     {
-        const controller = isUserControlled ? new CatKeyboardController() : new IdleController();
+        const controller = this.createCatController(isUserControlled)
         const cat = new Cat({...this._settings.cat, color: "preload/cat/" + color}, controller)
         this.addChild(cat);
         this.collisionEngine.startTracking(cat)
         cat.y += (this.cats.length % 3) * cat.height;
         cat.x += Math.floor(this.cats.length / 3) * cat.width
         this.cats.push(cat)
+    }
+    private createCatController(isUserControlled: boolean)
+    {
+        if (isUserControlled)
+        {
+            const arrowButtons = new OnScreenInput(defaultOnScreenInput)
+            this.addChild(arrowButtons)
+            return new CatKeyboardController(arrowButtons)
+        }
+        return  new IdleController();
     }
 }
 
