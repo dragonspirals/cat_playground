@@ -39,6 +39,8 @@ export class OnScreenInput extends ResizableContainer<OnScreenInputSettings>
         button.rotation = rotation;
         this.trackedKeys.push(button)
         button.keyPressed.on(() => this.onTrackedKeyPressed.fire())
+        button.eventMode = "static";
+        button.cursor = "pointer"
         return button
     }
 
@@ -67,7 +69,20 @@ export const defaultOnScreenInput: OnScreenInputSettings =
 {
     buttons:
     {
-        circleColor: { color: "rgba(241, 124, 144, 0.46)"},
-        arrowColor: { color: "rgb(56, 4, 28)"}
+        base:
+        {
+            circleColor: { color: "rgba(241, 124, 144, 0.46)"},
+            arrowColor: { color: "rgb(56, 4, 28)"}
+        },
+        pressed:
+        {
+            circleColor: { color: "rgba(131, 24, 42, 0.46)"},
+            arrowColor: { color: "rgb(39, 0, 18)"}
+        },
+        hover:
+        {
+            circleColor: { color: "rgba(241, 124, 144, 0.69)"},
+            arrowColor: { color: "rgb(110, 1, 52)"}
+        }
     }
 }

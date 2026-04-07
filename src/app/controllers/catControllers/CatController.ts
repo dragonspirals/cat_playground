@@ -1,6 +1,6 @@
 import { CatState } from "../../components/Cat";
 import { KeyboardInput } from "../input/KeyboardInput";
-import { defaultOnScreenInput, OnScreenInput } from "../input/OnScreenInput";
+import { OnScreenInput } from "../input/OnScreenInput";
 
 export abstract class ICatController
 {
@@ -17,10 +17,10 @@ export abstract class ICatController
 export class CatKeyboardController implements ICatController
 {
     public catState: CatState = CatState.Sitting;
-    public get isGoingUp() { return this._keyboardInput.isKeyPressed("ArrowUp") ?? false };
-    public get isGoingDown() { return this._keyboardInput.isKeyPressed("ArrowDown") ?? false };
-    public get isGoingLeft() { return this._keyboardInput.isKeyPressed("ArrowLeft") ?? false };
-    public get isGoingRight() { return this._keyboardInput.isKeyPressed("ArrowRight") ?? false };
+    public get isGoingUp() { return (this._keyboardInput.isKeyPressed("ArrowUp") || this._onScreenInput.isKeyPressed("ArrowUp")) ?? false };
+    public get isGoingDown() { return (this._keyboardInput.isKeyPressed("ArrowDown") || this._onScreenInput.isKeyPressed("ArrowDown")) ?? false };
+    public get isGoingLeft() { return (this._keyboardInput.isKeyPressed("ArrowLeft") || this._onScreenInput.isKeyPressed("ArrowLeft")) ?? false };
+    public get isGoingRight() { return (this._keyboardInput.isKeyPressed("ArrowRight") || this._onScreenInput.isKeyPressed("ArrowRight")) ?? false };
     public get activeDirections(){ return [this.isGoingDown, this.isGoingLeft, this.isGoingRight, this.isGoingUp].filter((bool) => bool === true) }
 
     public get onKeyPressed() { return this._keyboardInput.onTrackedKeyPressed }
